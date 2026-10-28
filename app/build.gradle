@@ -1,0 +1,32 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.CraftPlay777.jps'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.CraftPlay777.jps"
+        minSdk 23
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // Mapas de OpenStreetMap, sin API key ni Google Play Services
+    implementation 'org.osmdroid:osmdroid-android:6.1.18'
+}

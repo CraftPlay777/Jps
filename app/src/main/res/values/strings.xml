@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jps</string>
+    <string name="search_hint">Buscar lugares</string>
+    <string name="search">Buscar</string>
+    <string name="clear">Borrar</string>
+    <string name="zoom_in">Acercar</string>
+    <string name="zoom_out">Alejar</string>
+    <string name="layers">Cambiar capa del mapa</string>
+    <string name="my_location">Mi ubicación</string>
+    <string name="share">Compartir</string>
+    <string name="close">Cerrar</string>
+    <string name="share_place">Compartir lugar</string>
+    <string name="layer_standard">Mapa estándar</string>
+    <string name="layer_relief">Mapa de relieve</string>
+    <string name="finding_location">Buscando tu ubicación…</string>
+    <string name="searching_address">Buscando dirección…</string>
+    <string name="pin_dropped">Punto marcado</string>
+    <string name="no_results">Sin resultados</string>
+    <string name="error_network">No se pudo conectar. Revisa tu internet.</string>
+    <string name="location_denied">Permiso de ubicación denegado</string>
+</resources>
