@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.config.IConfigurationProvider;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -79,7 +80,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         // Configuración de osmdroid: antes de crear el mapa.
-        Configuration cfg = Configuration.getInstance();
+        IConfigurationProvider cfg = Configuration.getInstance();
         cfg.setUserAgentValue(getPackageName());
         cfg.setOsmdroidBasePath(new File(getCacheDir(), "osmdroid"));
         cfg.setOsmdroidTileCache(new File(getCacheDir(), "osmdroid/tiles"));
