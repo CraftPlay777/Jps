@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <org.osmdroid.views.MapView
         android:id="@+id/map"
@@ -26,12 +28,12 @@
             android:paddingEnd="4dp">
 
             <ImageButton
-                android:id="@+id/btn_search"
+                android:id="@+id/btn_menu"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/search"
-                android:src="@drawable/ic_search" />
+                android:contentDescription="@string/menu"
+                android:src="@drawable/ic_menu" />
 
             <EditText
                 android:id="@+id/search_input"
@@ -55,6 +57,14 @@
                 android:contentDescription="@string/clear"
                 android:src="@drawable/ic_close"
                 android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/search"
+                android:src="@drawable/ic_search" />
         </LinearLayout>
 
         <ListView
@@ -87,8 +97,8 @@
 
             <ImageButton
                 android:id="@+id/btn_zoom_in"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:background="@drawable/bg_fab"
                 android:contentDescription="@string/zoom_in"
                 android:elevation="4dp"
@@ -96,19 +106,29 @@
 
             <ImageButton
                 android:id="@+id/btn_zoom_out"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_fab"
                 android:contentDescription="@string/zoom_out"
                 android:elevation="4dp"
                 android:src="@drawable/ic_remove" />
 
             <ImageButton
+                android:id="@+id/btn_compass"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_fab"
+                android:contentDescription="@string/compass"
+                android:elevation="4dp"
+                android:src="@drawable/ic_explore" />
+
+            <ImageButton
                 android:id="@+id/btn_layers"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_fab"
                 android:contentDescription="@string/layers"
                 android:elevation="4dp"
@@ -116,9 +136,9 @@
 
             <ImageButton
                 android:id="@+id/btn_my_location"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_fab"
                 android:contentDescription="@string/my_location"
                 android:elevation="4dp"
@@ -133,51 +153,94 @@
             android:elevation="12dp"
             android:orientation="vertical"
             android:paddingStart="20dp"
-            android:paddingTop="18dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/card_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/card_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/btn_favorite"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/favorite_toggle"
+                    android:src="@drawable/ic_star_border" />
+
+                <ImageButton
+                    android:id="@+id/btn_close_card"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/close"
+                    android:src="@drawable/ic_close" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/card_coords"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="end"
+                android:layout_marginTop="6dp"
                 android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_directions"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="@string/directions"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary"
+                    android:textSize="13sp" />
 
                 <Button
                     android:id="@+id/btn_share"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
                     android:text="@string/share"
-                    android:textColor="@color/primary" />
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary"
+                    android:textSize="13sp" />
 
                 <Button
-                    android:id="@+id/btn_close_card"
+                    android:id="@+id/btn_copy"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/close"
-                    android:textColor="@color/primary" />
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="@string/copy_coords"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary"
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

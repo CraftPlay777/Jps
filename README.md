@@ -1,14 +1,33 @@
 # Jps
 
-App de mapas para Android, simple y sin API keys. Usa los mapas de OpenStreetMap (osmdroid).
+App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de OpenStreetMap (osmdroid).
 
-**Funciones:** búsqueda de lugares, mi ubicación, zoom, marcador con pulsación larga (con dirección),
-cambio entre mapa estándar y de relieve, compartir lugar, escala y recuerda la última posición.
+## Funciones
 
-- Paquete: `com.CraftPlay777.jps`
-- Android 6.0+ (minSdk 23)
+- Búsqueda de lugares con historial de búsquedas recientes
+- Mi ubicación (GPS), zoom, escala y brújula para orientar al norte
+- Rotación del mapa con dos dedos
+- Pin con pulsación larga (con su dirección)
+- Favoritos
+- Distancia desde tu posición al lugar seleccionado
+- Cómo llegar (abre otra app de mapas), compartir y copiar coordenadas
+- Mapa estándar y de relieve, y modo de mapa oscuro
+- Unidades métricas o imperiales
+- Recuerda la última posición del mapa
+- Política de privacidad dentro de la app, con aceptación en el primer arranque
+
+## Datos y privacidad
+
+Sin cuentas ni rastreadores. Lee la [política de privacidad](PRIVACY.md).
 
 ## Compilar
 
 Cada `git push` a `main` compila el APK con GitHub Actions.
 Descárgalo en **Actions → Build APK → Artifacts → Jps-debug-apk**.
+
+- Paquete: `com.CraftPlay777.jps`
+- Android 6.0+ (minSdk 23)
+
+## Licencia
+
+[MIT](LICENSE). Los datos del mapa son © colaboradores de OpenStreetMap (ODbL).

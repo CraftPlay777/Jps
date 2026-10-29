@@ -2,19 +2,27 @@ package com.CraftPlay777.jps;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +39,8 @@ import org.osmdroid.views.overlay.CopyrightOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.TilesOverlay;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -42,13 +52,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Jps: mapa con búsqueda de lugares, mi ubicación, marcadores, capas y compartir.
+ * Jps: mapa con búsqueda, mi ubicación, favoritos, historial, capas y ajustes.
  * Usa OpenStreetMap (osmdroid), así que no necesita API key.
  */
 public class MainActivity extends Activity {
 
     private static final int REQ_LOCATION = 1;
-    private static final String PREFS = "jps";
+    private static final int REQ_FAVORITE = 2;
+
+    private static final int MENU_FAVORITES = 1;
+    private static final int MENU_SETTINGS = 2;
+    private static final int MENU_PRIVACY = 3;
+    private static final int MENU_ABOUT = 4;
+    private static final int MENU_REPORT = 5;
+
+    private static final String ISSUES_URL = "https://github.com/CraftPlay777/Jps/issues";
 
     private static final XYTileSource TOPO = new XYTileSource(
             "OpenTopoMap", 0, 17, 256, ".png",
@@ -60,12 +78,16 @@ public class MainActivity extends Activity {
 
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private final List<Place> currentResults = new ArrayList<>();
+    private final List<String> historyItems = new ArrayList<>();
 
     private MapView map;
     private MyLocationNewOverlay myLocation;
+    private ScaleBarOverlay scale;
     private Marker marker;
     private Place selected;
     private boolean topo;
+    private boolean showingHistory;
+    private AlertDialog consentDialog;
 
     private EditText searchInput;
     private View clearButton;
@@ -74,6 +96,7 @@ public class MainActivity extends Activity {
     private View card;
     private TextView cardTitle;
     private TextView cardCoords;
+    private ImageButton favoriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,15 +116,48 @@ public class MainActivity extends Activity {
         card = findViewById(R.id.card);
         cardTitle = findViewById(R.id.card_title);
         cardCoords = findViewById(R.id.card_coords);
+        favoriteButton = findViewById(R.id.btn_favorite);
         map = findViewById(R.id.map);
 
         setupMap();
         setupSearch();
         setupButtons();
 
-        SharedPreferences sp = getSharedPreferences(PREFS, MODE_PRIVATE);
-        if (!sp.contains("lat")) {
-            // Primera vez: pedimos ubicación para centrar el mapa en el usuario.
+        if (Store.isConsentGiven(this)) {
+            onConsentGiven();
+        } else {
+            // Hasta que el usuario acepte, la app no hace ninguna conexión.
+            map.setUseDataConnection(false);
+        }
+    }
+
+    // ------------------------------------------------------------- privacidad
+
+    private void maybeAskConsent() {
+        if (Store.isConsentGiven(this)) {
+            return;
+        }
+        if (consentDialog != null && consentDialog.isShowing()) {
+            return;
+        }
+        consentDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.consent_title)
+                .setMessage(R.string.consent_message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.consent_accept, (d, w) -> {
+                    Store.setConsentGiven(this, true);
+                    onConsentGiven();
+                })
+                .setNegativeButton(R.string.consent_read, (d, w) -> openPage(InfoActivity.PAGE_PRIVACY))
+                .setNeutralButton(R.string.consent_exit, (d, w) -> finish())
+                .show();
+    }
+
+    private void onConsentGiven() {
+        map.setUseDataConnection(true);
+        applyTileSource();
+        if (!Store.hasPosition(this)) {
+            // Primera vez: centramos el mapa en el usuario.
             if (hasLocationPermission()) {
                 startLocation();
             } else {
@@ -119,15 +175,11 @@ public class MainActivity extends Activity {
         map.setMaxZoomLevel(19.0);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
 
-        SharedPreferences sp = getSharedPreferences(PREFS, MODE_PRIVATE);
-        topo = sp.getBoolean("topo", false);
+        topo = Store.isTopo(this);
         applyTileSource();
 
-        double lat = Double.longBitsToDouble(sp.getLong("lat", Double.doubleToLongBits(20.0)));
-        double lon = Double.longBitsToDouble(sp.getLong("lon", Double.doubleToLongBits(0.0)));
-        double zoom = sp.getFloat("zoom", 3.0f);
-        map.getController().setZoom(zoom);
-        map.getController().setCenter(new GeoPoint(lat, lon));
+        map.getController().setZoom((double) Store.getZoom(this));
+        map.getController().setCenter(new GeoPoint(Store.getLat(this), Store.getLon(this)));
 
         // Toques en el mapa: se añade primero para que los marcadores tengan prioridad.
         map.getOverlays().add(0, new MapEventsOverlay(new MapEventsReceiver() {
@@ -145,9 +197,13 @@ public class MainActivity extends Activity {
             }
         }));
 
+        RotationGestureOverlay rotation = new RotationGestureOverlay(map);
+        rotation.setEnabled(true);
+        map.getOverlays().add(rotation);
+
         map.getOverlays().add(new CopyrightOverlay(this));
 
-        ScaleBarOverlay scale = new ScaleBarOverlay(map);
+        scale = new ScaleBarOverlay(map);
         scale.setAlignBottom(true);
         scale.setScaleBarOffset(dp(12), dp(32));
         map.getOverlays().add(scale);
@@ -168,12 +224,40 @@ public class MainActivity extends Activity {
                 Toast.LENGTH_SHORT).show();
     }
 
+    /** Aplica los ajustes guardados (se llama al volver de la pantalla de ajustes). */
+    private void applySettings() {
+        boolean dark = Store.isDarkMap(this);
+        map.getOverlayManager().getTilesOverlay()
+                .setColorFilter(dark ? TilesOverlay.INVERT_COLORS : null);
+
+        scale.setUnitsOfMeasure(Store.isImperial(this)
+                ? ScaleBarOverlay.UnitsOfMeasure.imperial
+                : ScaleBarOverlay.UnitsOfMeasure.metric);
+
+        if (Store.isKeepScreenOn(this)) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        updateCardInfo();
+        map.invalidate();
+    }
+
     // -------------------------------------------------------------- búsqueda
 
     private void setupSearch() {
         resultsAdapter = new ArrayAdapter<String>(this, R.layout.item_result, new ArrayList<String>());
         resultsList.setAdapter(resultsAdapter);
         resultsList.setOnItemClickListener((parent, view, position, id) -> {
+            if (showingHistory) {
+                if (position < historyItems.size()) {
+                    String q = historyItems.get(position);
+                    searchInput.setText(q);
+                    searchInput.setSelection(q.length());
+                    doSearch();
+                }
+                return;
+            }
             if (position < currentResults.size()) {
                 Place p = currentResults.get(position);
                 hideResults();
@@ -189,6 +273,12 @@ public class MainActivity extends Activity {
             return false;
         });
 
+        searchInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && searchInput.getText().length() == 0) {
+                showHistory();
+            }
+        });
+
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -201,6 +291,13 @@ public class MainActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 clearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+                if (s.length() > 0) {
+                    if (showingHistory) {
+                        hideResults();
+                    }
+                } else if (searchInput.hasFocus()) {
+                    showHistory();
+                }
             }
         });
     }
@@ -211,6 +308,7 @@ public class MainActivity extends Activity {
             return;
         }
         hideKeyboard();
+        Store.addHistory(this, q);
         io.execute(() -> {
             try {
                 List<Place> found = Nominatim.search(q);
@@ -231,17 +329,32 @@ public class MainActivity extends Activity {
             showPlace(found.get(0), true);
             return;
         }
+        showingHistory = false;
         currentResults.clear();
         currentResults.addAll(found);
         resultsAdapter.clear();
         for (Place p : found) {
             resultsAdapter.add(p.name);
         }
-        resultsAdapter.notifyDataSetChanged();
+        resultsList.setVisibility(View.VISIBLE);
+    }
+
+    private void showHistory() {
+        List<String> history = Store.getHistory(this);
+        if (history.isEmpty()) {
+            hideResults();
+            return;
+        }
+        showingHistory = true;
+        historyItems.clear();
+        historyItems.addAll(history);
+        resultsAdapter.clear();
+        resultsAdapter.addAll(history);
         resultsList.setVisibility(View.VISIBLE);
     }
 
     private void hideResults() {
+        showingHistory = false;
         resultsList.setVisibility(View.GONE);
     }
 
@@ -261,7 +374,7 @@ public class MainActivity extends Activity {
         marker.setPosition(point);
 
         cardTitle.setText(p.name != null ? p.name : getString(R.string.searching_address));
-        cardCoords.setText(String.format(Locale.US, "%.5f, %.5f", p.lat, p.lon));
+        updateCardInfo();
         card.setVisibility(View.VISIBLE);
 
         if (zoomTo) {
@@ -288,6 +401,26 @@ public class MainActivity extends Activity {
         }
     }
 
+    /** Actualiza coordenadas, distancia a mi posición y la estrella de favorito. */
+    private void updateCardInfo() {
+        if (selected == null) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder(
+                String.format(Locale.US, "%.5f, %.5f", selected.lat, selected.lon));
+        GeoPoint here = myLocation.getMyLocation();
+        if (here != null) {
+            float[] result = new float[1];
+            Location.distanceBetween(here.getLatitude(), here.getLongitude(),
+                    selected.lat, selected.lon, result);
+            sb.append("  \u00B7  ").append(getString(R.string.distance_from_you,
+                    Ui.formatDistance(result[0], Store.isImperial(this))));
+        }
+        cardCoords.setText(sb.toString());
+        favoriteButton.setImageResource(Store.isFavorite(this, selected)
+                ? R.drawable.ic_star : R.drawable.ic_star_border);
+    }
+
     private void clearSelection() {
         selected = null;
         card.setVisibility(View.GONE);
@@ -296,6 +429,20 @@ public class MainActivity extends Activity {
             marker = null;
             map.invalidate();
         }
+    }
+
+    private void toggleFavorite() {
+        if (selected == null) {
+            return;
+        }
+        String name = selected.name != null
+                ? selected.name
+                : String.format(Locale.US, "%.5f, %.5f", selected.lat, selected.lon);
+        boolean now = Store.toggleFavorite(this, new Place(name, selected.lat, selected.lon));
+        Toast.makeText(this,
+                now ? R.string.favorite_added : R.string.favorite_removed,
+                Toast.LENGTH_SHORT).show();
+        updateCardInfo();
     }
 
     private void shareSelected() {
@@ -312,9 +459,36 @@ public class MainActivity extends Activity {
         startActivity(Intent.createChooser(send, getString(R.string.share_place)));
     }
 
+    private void copyCoordinates() {
+        if (selected == null) {
+            return;
+        }
+        String text = String.format(Locale.US, "%.6f, %.6f", selected.lat, selected.lon);
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            cm.setPrimaryClip(ClipData.newPlainText("coordenadas", text));
+            Toast.makeText(this, R.string.coords_copied, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /** Abre el lugar en otra app de mapas o navegación instalada en el móvil. */
+    private void openDirections() {
+        if (selected == null) {
+            return;
+        }
+        Uri uri = Uri.parse(String.format(Locale.US, "geo:%.6f,%.6f?q=%.6f,%.6f",
+                selected.lat, selected.lon, selected.lat, selected.lon));
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.no_app, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     // ----------------------------------------------------------------- botones
 
     private void setupButtons() {
+        findViewById(R.id.btn_menu).setOnClickListener(this::showMenu);
         findViewById(R.id.btn_search).setOnClickListener(v -> doSearch());
         findViewById(R.id.btn_clear).setOnClickListener(v -> {
             searchInput.setText("");
@@ -323,6 +497,10 @@ public class MainActivity extends Activity {
         });
         findViewById(R.id.btn_zoom_in).setOnClickListener(v -> map.getController().zoomIn());
         findViewById(R.id.btn_zoom_out).setOnClickListener(v -> map.getController().zoomOut());
+        findViewById(R.id.btn_compass).setOnClickListener(v -> {
+            map.setMapOrientation(0f);
+            map.invalidate();
+        });
         findViewById(R.id.btn_layers).setOnClickListener(v -> toggleLayer());
         findViewById(R.id.btn_my_location).setOnClickListener(v -> {
             if (hasLocationPermission()) {
@@ -331,8 +509,68 @@ public class MainActivity extends Activity {
                 requestLocationPermission();
             }
         });
-        findViewById(R.id.btn_share).setOnClickListener(v -> shareSelected());
+
+        findViewById(R.id.btn_favorite).setOnClickListener(v -> toggleFavorite());
         findViewById(R.id.btn_close_card).setOnClickListener(v -> clearSelection());
+        findViewById(R.id.btn_directions).setOnClickListener(v -> openDirections());
+        findViewById(R.id.btn_share).setOnClickListener(v -> shareSelected());
+        findViewById(R.id.btn_copy).setOnClickListener(v -> copyCoordinates());
+    }
+
+    private void showMenu(View anchor) {
+        PopupMenu menu = new PopupMenu(this, anchor);
+        menu.getMenu().add(0, MENU_FAVORITES, 0, R.string.favorites);
+        menu.getMenu().add(0, MENU_SETTINGS, 1, R.string.settings);
+        menu.getMenu().add(0, MENU_PRIVACY, 2, R.string.privacy_title);
+        menu.getMenu().add(0, MENU_ABOUT, 3, R.string.about_title);
+        menu.getMenu().add(0, MENU_REPORT, 4, R.string.report_problem);
+        menu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case MENU_FAVORITES:
+                    startActivityForResult(new Intent(this, FavoritesActivity.class), REQ_FAVORITE);
+                    return true;
+                case MENU_SETTINGS:
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    return true;
+                case MENU_PRIVACY:
+                    openPage(InfoActivity.PAGE_PRIVACY);
+                    return true;
+                case MENU_ABOUT:
+                    openPage(InfoActivity.PAGE_ABOUT);
+                    return true;
+                case MENU_REPORT:
+                    openUrl(ISSUES_URL);
+                    return true;
+                default:
+                    return false;
+            }
+        });
+        menu.show();
+    }
+
+    private void openPage(String page) {
+        Intent i = new Intent(this, InfoActivity.class);
+        i.putExtra(InfoActivity.EXTRA_PAGE, page);
+        startActivity(i);
+    }
+
+    private void openUrl(String url) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.no_app, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_FAVORITE && resultCode == RESULT_OK && data != null) {
+            String name = data.getStringExtra("name");
+            double lat = data.getDoubleExtra("lat", 0);
+            double lon = data.getDoubleExtra("lon", 0);
+            showPlace(new Place(name, lat, lon), true);
+        }
     }
 
     // --------------------------------------------------------------- ubicación
@@ -361,6 +599,7 @@ public class MainActivity extends Activity {
                 GeoPoint g = myLocation.getMyLocation();
                 if (g != null) {
                     map.getController().animateTo(g, 17.0, 800L);
+                    updateCardInfo();
                 }
             }));
         }
@@ -386,15 +625,19 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         map.onResume();
-        if (hasLocationPermission()) {
+        applySettings();
+        if (Store.isConsentGiven(this) && hasLocationPermission()) {
             myLocation.enableMyLocation();
         }
+        maybeAskConsent();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        saveView();
+        if (Store.isConsentGiven(this)) {
+            saveView();
+        }
         myLocation.disableMyLocation();
         map.onPause();
     }
@@ -402,6 +645,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (consentDialog != null) {
+            consentDialog.dismiss();
+        }
         io.shutdown();
         map.onDetach();
     }
@@ -419,12 +665,8 @@ public class MainActivity extends Activity {
 
     private void saveView() {
         IGeoPoint c = map.getMapCenter();
-        getSharedPreferences(PREFS, MODE_PRIVATE).edit()
-                .putLong("lat", Double.doubleToLongBits(c.getLatitude()))
-                .putLong("lon", Double.doubleToLongBits(c.getLongitude()))
-                .putFloat("zoom", (float) map.getZoomLevelDouble())
-                .putBoolean("topo", topo)
-                .apply();
+        Store.savePosition(this, c.getLatitude(), c.getLongitude(),
+                (float) map.getZoomLevelDouble(), topo);
     }
 
     // ----------------------------------------------------------------- utilidades
