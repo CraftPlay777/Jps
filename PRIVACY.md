@@ -16,8 +16,8 @@ El permiso de ubicación es opcional. Se usa solo en tu dispositivo para mostrar
 
 Para funcionar, la app se conecta a estos servicios, que reciben tu dirección IP y los datos indicados:
 
-- **OpenStreetMap** (tile.openstreetmap.org): descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.
-- **OpenTopoMap** (opentopomap.org): solo si activas el mapa de relieve; recibe la zona que estás viendo.
+- **OpenStreetMap** (tile.openstreetmap.org): es el servicio de mapa predeterminado; descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.
+- **Otros servicios de mapa**, solo si los eliges en Ajustes: OpenStreetMap Francia, Humanitario y CyclOSM (tile.openstreetmap.fr y tile-cyclosm.openstreetmap.fr, operados por OpenStreetMap Francia) u OpenTopoMap (opentopomap.org). El servicio que elijas recibe la zona que estás viendo.
 - **Nominatim** (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.
 
 Cada servicio tiene su propia política de privacidad y Jps no controla cómo la aplican. La de la Fundación OpenStreetMap está en <https://osmfoundation.org/wiki/Privacy_Policy>.

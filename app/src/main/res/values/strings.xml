@@ -11,10 +11,8 @@
     <string name="zoom_in">Acercar</string>
     <string name="zoom_out">Alejar</string>
     <string name="compass">Orientar al norte</string>
-    <string name="layers">Cambiar capa del mapa</string>
+    <string name="layers">Servicio de mapa</string>
     <string name="my_location">Mi ubicación</string>
-    <string name="layer_standard">Mapa estándar</string>
-    <string name="layer_relief">Mapa de relieve</string>
     <string name="finding_location">Buscando tu ubicación…</string>
     <string name="searching_address">Buscando dirección…</string>
     <string name="pin_dropped">Punto marcado</string>
@@ -45,6 +43,12 @@
     <string name="settings_map">Mapa</string>
     <string name="settings_data">Datos</string>
     <string name="settings_info">Información</string>
+    <string name="setting_map_source">Servicio de mapa</string>
+    <string name="source_osm">OpenStreetMap estándar</string>
+    <string name="source_osmfr">OpenStreetMap Francia (etiquetas locales)</string>
+    <string name="source_hot">Humanitario (HOT)</string>
+    <string name="source_cyclosm">CyclOSM (ciclismo)</string>
+    <string name="source_topo">OpenTopoMap (relieve)</string>
     <string name="setting_dark">Mapa oscuro</string>
     <string name="setting_imperial">Usar millas y pies</string>
     <string name="setting_keep_on">Mantener la pantalla encendida</string>
@@ -80,8 +84,8 @@
 <h3>Servicios de terceros</h3>
 <p>Para funcionar, la app se conecta a estos servicios, que reciben tu dirección IP y los datos indicados:</p>
 <ul>
-<li><b>OpenStreetMap</b> (tile.openstreetmap.org): descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.</li>
-<li><b>OpenTopoMap</b> (opentopomap.org): solo si activas el mapa de relieve; recibe la zona que estás viendo.</li>
+<li><b>OpenStreetMap</b> (tile.openstreetmap.org): es el servicio de mapa predeterminado; descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.</li>
+<li><b>Otros servicios de mapa</b>, solo si los eliges en Ajustes: OpenStreetMap Francia, Humanitario y CyclOSM (tile.openstreetmap.fr y tile-cyclosm.openstreetmap.fr, operados por OpenStreetMap Francia) u OpenTopoMap (opentopomap.org). El servicio que elijas recibe la zona que estás viendo.</li>
 <li><b>Nominatim</b> (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.</li>
 </ul>
 <p>Cada servicio tiene su propia política de privacidad y Jps no controla cómo la aplican. La de la Fundación OpenStreetMap está en <a href="https://osmfoundation.org/wiki/Privacy_Policy">osmfoundation.org/wiki/Privacy_Policy</a>.</p>
@@ -114,7 +118,7 @@
 <h3>Datos y créditos</h3>
 <ul>
 <li>Datos del mapa: © colaboradores de OpenStreetMap, licencia ODbL. <a href="https://www.openstreetmap.org/copyright">openstreetmap.org/copyright</a></li>
-<li>Mapa de relieve: © OpenTopoMap (CC-BY-SA), con datos SRTM.</li>
+<li>Estilos de mapa opcionales: © OpenTopoMap (CC-BY-SA, con datos SRTM), CyclOSM, Humanitarian OpenStreetMap Team y OpenStreetMap Francia.</li>
 <li>Búsqueda de lugares: Nominatim.</li>
 <li>Librería de mapas: osmdroid (Apache License 2.0).</li>
 <li>Iconos: Material Icons de Google (Apache License 2.0).</li>

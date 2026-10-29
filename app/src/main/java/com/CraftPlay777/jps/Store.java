@@ -57,6 +57,20 @@ final class Store {
         sp(c).edit().putBoolean("keep_on", value).apply();
     }
 
+    /** Servicio de mapa elegido (ver MapSources). */
+    static String getMapSource(Context c) {
+        String id = sp(c).getString("map_source", null);
+        if (id == null) {
+            // Versiones anteriores solo guardaban si estaba activo el mapa de relieve.
+            return sp(c).getBoolean("topo", false) ? "topo" : "osm";
+        }
+        return id;
+    }
+
+    static void setMapSource(Context c, String id) {
+        sp(c).edit().putString("map_source", id).apply();
+    }
+
     // ----------------------------------------------------- última posición
 
     static boolean hasPosition(Context c) {
@@ -75,16 +89,11 @@ final class Store {
         return sp(c).getFloat("zoom", 3.0f);
     }
 
-    static boolean isTopo(Context c) {
-        return sp(c).getBoolean("topo", false);
-    }
-
-    static void savePosition(Context c, double lat, double lon, float zoom, boolean topo) {
+    static void savePosition(Context c, double lat, double lon, float zoom) {
         sp(c).edit()
                 .putLong("lat", Double.doubleToLongBits(lat))
                 .putLong("lon", Double.doubleToLongBits(lon))
                 .putFloat("zoom", zoom)
-                .putBoolean("topo", topo)
                 .apply();
     }
 

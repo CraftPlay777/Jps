@@ -12,7 +12,7 @@ App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de
 - Favoritos
 - Distancia desde tu posición al lugar seleccionado
 - Cómo llegar (abre otra app de mapas), compartir y copiar coordenadas
-- Mapa estándar y de relieve, y modo de mapa oscuro
+- Servicio de mapa a elegir en Ajustes (OpenStreetMap, OSM Francia, Humanitario, CyclOSM u OpenTopoMap) y modo de mapa oscuro
 - Unidades métricas o imperiales
 - Recuerda la última posición del mapa
 - Política de privacidad dentro de la app, con aceptación en el primer arranque

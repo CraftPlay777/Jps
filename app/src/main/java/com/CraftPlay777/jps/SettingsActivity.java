@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /** Ajustes: apariencia del mapa, unidades, borrado de datos y accesos a información legal. */
@@ -15,6 +20,10 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Ui.setupHeader(this, R.string.settings);
+
+        refreshMapSourceRow();
+        findViewById(R.id.row_map_source).setOnClickListener(
+                v -> MapSources.showChooser(this, this::refreshMapSourceRow));
 
         Switch dark = findViewById(R.id.sw_dark);
         dark.setChecked(Store.isDarkMap(this));
@@ -45,6 +54,20 @@ public class SettingsActivity extends Activity {
 
         findViewById(R.id.row_privacy).setOnClickListener(v -> openPage(InfoActivity.PAGE_PRIVACY));
         findViewById(R.id.row_about).setOnClickListener(v -> openPage(InfoActivity.PAGE_ABOUT));
+    }
+
+    /** Muestra el nombre del servicio de mapa elegido bajo el título de la opción. */
+    private void refreshMapSourceRow() {
+        TextView row = findViewById(R.id.row_map_source);
+        String current = getString(MapSources.byId(Store.getMapSource(this)).nameRes);
+        SpannableStringBuilder sb = new SpannableStringBuilder(getString(R.string.setting_map_source));
+        sb.append("\n");
+        int start = sb.length();
+        sb.append(current);
+        sb.setSpan(new RelativeSizeSpan(0.85f), start, sb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sb.setSpan(new ForegroundColorSpan(getColor(R.color.text_secondary)), start, sb.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        row.setText(sb);
     }
 
     private void openPage(String page) {

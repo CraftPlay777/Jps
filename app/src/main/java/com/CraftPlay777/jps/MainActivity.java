@@ -31,8 +31,6 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.config.IConfigurationProvider;
 import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
@@ -72,14 +70,6 @@ public class MainActivity extends Activity {
 
     private static final String ISSUES_URL = "https://github.com/CraftPlay777/Jps/issues";
 
-    private static final XYTileSource TOPO = new XYTileSource(
-            "OpenTopoMap", 0, 17, 256, ".png",
-            new String[]{
-                    "https://a.tile.opentopomap.org/",
-                    "https://b.tile.opentopomap.org/",
-                    "https://c.tile.opentopomap.org/"},
-            "\u00A9 OpenStreetMap contributors, SRTM | \u00A9 OpenTopoMap (CC-BY-SA)");
-
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private final ExecutorService boundaryIo = Executors.newSingleThreadExecutor();
     private final List<Place> currentResults = new ArrayList<>();
@@ -92,7 +82,7 @@ public class MainActivity extends Activity {
     private FolderOverlay boundary;
     private int boundaryToken;
     private Place selected;
-    private boolean topo;
+    private String sourceId;
     private boolean showingHistory;
     private AlertDialog consentDialog;
 
@@ -162,6 +152,7 @@ public class MainActivity extends Activity {
 
     private void onConsentGiven() {
         map.setUseDataConnection(true);
+        sourceId = null; // fuerza a recrear el proveedor de teselas ya con conexión
         applyTileSource();
         if (!Store.hasPosition(this)) {
             // Primera vez: centramos el mapa en el usuario.
@@ -182,7 +173,6 @@ public class MainActivity extends Activity {
         map.setMaxZoomLevel(19.0);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
 
-        topo = Store.isTopo(this);
         applyTileSource();
 
         map.getController().setZoom((double) Store.getZoom(this));
@@ -219,16 +209,18 @@ public class MainActivity extends Activity {
         map.getOverlays().add(myLocation);
     }
 
+    /** Pone en el mapa el servicio elegido en Ajustes (solo si ha cambiado). */
     private void applyTileSource() {
-        map.setTileSource(topo ? TOPO : TileSourceFactory.MAPNIK);
+        String id = Store.getMapSource(this);
+        if (id.equals(sourceId)) {
+            return;
+        }
+        sourceId = id;
+        map.setTileSource(MapSources.byId(id).tiles);
     }
 
-    private void toggleLayer() {
-        topo = !topo;
-        applyTileSource();
-        Toast.makeText(this,
-                topo ? R.string.layer_relief : R.string.layer_standard,
-                Toast.LENGTH_SHORT).show();
+    private void chooseMapSource() {
+        MapSources.showChooser(this, this::applyTileSource);
     }
 
     /** Aplica los ajustes guardados (se llama al volver de la pantalla de ajustes). */
@@ -582,7 +574,7 @@ public class MainActivity extends Activity {
             map.setMapOrientation(0f);
             map.invalidate();
         });
-        findViewById(R.id.btn_layers).setOnClickListener(v -> toggleLayer());
+        findViewById(R.id.btn_layers).setOnClickListener(v -> chooseMapSource());
         findViewById(R.id.btn_my_location).setOnClickListener(v -> {
             if (hasLocationPermission()) {
                 startLocation();
@@ -707,6 +699,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         map.onResume();
+        applyTileSource();
         applySettings();
         if (Store.isConsentGiven(this) && hasLocationPermission()) {
             myLocation.enableMyLocation();
@@ -752,7 +745,7 @@ public class MainActivity extends Activity {
     private void saveView() {
         IGeoPoint c = map.getMapCenter();
         Store.savePosition(this, c.getLatitude(), c.getLongitude(),
-                (float) map.getZoomLevelDouble(), topo);
+                (float) map.getZoomLevelDouble());
     }
 
     // ----------------------------------------------------------------- utilidades

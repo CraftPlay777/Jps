@@ -21,6 +21,12 @@
                 style="@style/SectionTitle"
                 android:text="@string/settings_map" />
 
+            <TextView
+                android:id="@+id/row_map_source"
+                style="@style/SettingRow"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp" />
+
             <Switch
                 android:id="@+id/sw_dark"
                 style="@style/SettingRow"
