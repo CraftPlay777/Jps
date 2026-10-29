@@ -9,6 +9,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,12 +33,15 @@ import org.osmdroid.config.IConfigurationProvider;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.CopyrightOverlay;
+import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
@@ -77,6 +81,7 @@ public class MainActivity extends Activity {
             "\u00A9 OpenStreetMap contributors, SRTM | \u00A9 OpenTopoMap (CC-BY-SA)");
 
     private final ExecutorService io = Executors.newSingleThreadExecutor();
+    private final ExecutorService boundaryIo = Executors.newSingleThreadExecutor();
     private final List<Place> currentResults = new ArrayList<>();
     private final List<String> historyItems = new ArrayList<>();
 
@@ -84,6 +89,8 @@ public class MainActivity extends Activity {
     private MyLocationNewOverlay myLocation;
     private ScaleBarOverlay scale;
     private Marker marker;
+    private FolderOverlay boundary;
+    private int boundaryToken;
     private Place selected;
     private boolean topo;
     private boolean showingHistory;
@@ -295,8 +302,11 @@ public class MainActivity extends Activity {
                     if (showingHistory) {
                         hideResults();
                     }
-                } else if (searchInput.hasFocus()) {
-                    showHistory();
+                } else {
+                    clearBoundary();
+                    if (searchInput.hasFocus()) {
+                        showHistory();
+                    }
                 }
             }
         });
@@ -362,6 +372,9 @@ public class MainActivity extends Activity {
 
     private void showPlace(Place p, boolean zoomTo) {
         selected = p;
+        if (p.osmType != null) {
+            loadBoundary(p);
+        }
 
         if (marker == null) {
             marker = new Marker(map);
@@ -378,7 +391,7 @@ public class MainActivity extends Activity {
         card.setVisibility(View.VISIBLE);
 
         if (zoomTo) {
-            map.getController().animateTo(point, 16.0, 800L);
+            zoomToPlace(p, point);
         }
         map.invalidate();
 
@@ -419,6 +432,73 @@ public class MainActivity extends Activity {
         cardCoords.setText(sb.toString());
         favoriteButton.setImageResource(Store.isFavorite(this, selected)
                 ? R.drawable.ic_star : R.drawable.ic_star_border);
+    }
+
+    // ------------------------------------------------------- contorno de la zona
+
+    /** Si el lugar es una zona grande (país, provincia, ciudad) encuadra toda la zona. */
+    private void zoomToPlace(Place p, GeoPoint point) {
+        if (p.bbox != null) {
+            double south = p.bbox[0];
+            double north = p.bbox[1];
+            double west = p.bbox[2];
+            double east = p.bbox[3];
+            if (Math.max(north - south, east - west) > 0.01) {
+                map.zoomToBoundingBox(new BoundingBox(north, east, south, west), true, dp(80));
+                return;
+            }
+        }
+        map.getController().animateTo(point, 16.0, 800L);
+    }
+
+    /** Descarga el contorno del lugar y lo dibuja con líneas rojas. */
+    private void loadBoundary(Place p) {
+        clearBoundary();
+        if (p.osmType == null || "node".equals(p.osmType)) {
+            return; // un punto no tiene contorno
+        }
+        final int token = boundaryToken;
+        boundaryIo.execute(() -> {
+            try {
+                List<List<GeoPoint>> rings = Nominatim.boundary(p.osmType, p.osmId, p.bbox);
+                runOnUiThread(() -> {
+                    if (token == boundaryToken) {
+                        showBoundary(rings);
+                    }
+                });
+            } catch (Exception ignored) {
+                // Sin contorno: se queda solo el marcador.
+            }
+        });
+    }
+
+    private void showBoundary(List<List<GeoPoint>> rings) {
+        if (rings.isEmpty()) {
+            return;
+        }
+        FolderOverlay folder = new FolderOverlay();
+        for (List<GeoPoint> ring : rings) {
+            Polygon poly = new Polygon();
+            poly.setPoints(ring);
+            poly.getFillPaint().setColor(Color.TRANSPARENT);
+            poly.getOutlinePaint().setColor(Color.RED);
+            poly.getOutlinePaint().setStrokeWidth(dp(3));
+            // Sin ventana de información, y los toques siguen pasando al mapa.
+            poly.setOnClickListener((polygon, mv, pos) -> false);
+            folder.add(poly);
+        }
+        boundary = folder;
+        map.getOverlays().add(1, folder);
+        map.invalidate();
+    }
+
+    private void clearBoundary() {
+        boundaryToken++;
+        if (boundary != null) {
+            map.getOverlays().remove(boundary);
+            boundary = null;
+            map.invalidate();
+        }
     }
 
     private void clearSelection() {
@@ -494,6 +574,7 @@ public class MainActivity extends Activity {
             searchInput.setText("");
             hideResults();
             clearSelection();
+            clearBoundary();
         });
         findViewById(R.id.btn_zoom_in).setOnClickListener(v -> map.getController().zoomIn());
         findViewById(R.id.btn_zoom_out).setOnClickListener(v -> map.getController().zoomOut());
@@ -569,6 +650,7 @@ public class MainActivity extends Activity {
             String name = data.getStringExtra("name");
             double lat = data.getDoubleExtra("lat", 0);
             double lon = data.getDoubleExtra("lon", 0);
+            clearBoundary();
             showPlace(new Place(name, lat, lon), true);
         }
     }
@@ -649,6 +731,7 @@ public class MainActivity extends Activity {
             consentDialog.dismiss();
         }
         io.shutdown();
+        boundaryIo.shutdown();
         map.onDetach();
     }
 
@@ -658,6 +741,9 @@ public class MainActivity extends Activity {
             hideResults();
         } else if (card.getVisibility() == View.VISIBLE) {
             clearSelection();
+        } else if (boundary != null) {
+            searchInput.setText("");
+            clearBoundary();
         } else {
             super.onBackPressed();
         }

@@ -8,6 +8,7 @@ App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de
 - Mi ubicación (GPS), zoom, escala y brújula para orientar al norte
 - Rotación del mapa con dos dedos
 - Pin con pulsación larga (con su dirección)
+- Contorno en rojo de la zona buscada (países, provincias, ciudades…) hasta que borras la búsqueda
 - Favoritos
 - Distancia desde tu posición al lugar seleccionado
 - Cómo llegar (abre otra app de mapas), compartir y copiar coordenadas

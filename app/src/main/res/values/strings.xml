@@ -82,7 +82,7 @@
 <ul>
 <li><b>OpenStreetMap</b> (tile.openstreetmap.org): descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.</li>
 <li><b>OpenTopoMap</b> (opentopomap.org): solo si activas el mapa de relieve; recibe la zona que estás viendo.</li>
-<li><b>Nominatim</b> (nominatim.openstreetmap.org): recibe el texto que buscas, o las coordenadas de un punto que marcas con pulsación larga, para devolver resultados o direcciones.</li>
+<li><b>Nominatim</b> (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.</li>
 </ul>
 <p>Cada servicio tiene su propia política de privacidad y Jps no controla cómo la aplican. La de la Fundación OpenStreetMap está en <a href="https://osmfoundation.org/wiki/Privacy_Policy">osmfoundation.org/wiki/Privacy_Policy</a>.</p>
 <p>Jps no hace ninguna conexión hasta que aceptas esta política la primera vez que abres la app.</p>
