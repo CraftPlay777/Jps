@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
     private static final int MENU_PRIVACY = 3;
     private static final int MENU_ABOUT = 4;
     private static final int MENU_REPORT = 5;
+    private static final int MENU_GLOBE = 6;
 
     private static final String ISSUES_URL = "https://github.com/CraftPlay777/Jps/issues";
 
@@ -603,14 +604,18 @@ public class MainActivity extends Activity {
     private void showMenu(View anchor) {
         PopupMenu menu = new PopupMenu(this, anchor);
         menu.getMenu().add(0, MENU_FAVORITES, 0, R.string.favorites);
-        menu.getMenu().add(0, MENU_SETTINGS, 1, R.string.settings);
-        menu.getMenu().add(0, MENU_PRIVACY, 2, R.string.privacy_title);
-        menu.getMenu().add(0, MENU_ABOUT, 3, R.string.about_title);
-        menu.getMenu().add(0, MENU_REPORT, 4, R.string.report_problem);
+        menu.getMenu().add(0, MENU_GLOBE, 1, R.string.menu_globe);
+        menu.getMenu().add(0, MENU_SETTINGS, 2, R.string.settings);
+        menu.getMenu().add(0, MENU_PRIVACY, 3, R.string.privacy_title);
+        menu.getMenu().add(0, MENU_ABOUT, 4, R.string.about_title);
+        menu.getMenu().add(0, MENU_REPORT, 5, R.string.report_problem);
         menu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case MENU_FAVORITES:
                     startActivityForResult(new Intent(this, FavoritesActivity.class), REQ_FAVORITE);
+                    return true;
+                case MENU_GLOBE:
+                    openGlobe();
                     return true;
                 case MENU_SETTINGS:
                     startActivity(new Intent(this, SettingsActivity.class));
@@ -629,6 +634,15 @@ public class MainActivity extends Activity {
             }
         });
         menu.show();
+    }
+
+    /** Abre el globo 3D centrado en la zona que se está viendo en el mapa. */
+    private void openGlobe() {
+        IGeoPoint c = map.getMapCenter();
+        Intent i = new Intent(this, GlobeActivity.class);
+        i.putExtra(GlobeActivity.EXTRA_LAT, c.getLatitude());
+        i.putExtra(GlobeActivity.EXTRA_LON, c.getLongitude());
+        startActivity(i);
     }
 
     private void openPage(String page) {

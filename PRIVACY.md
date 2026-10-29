@@ -18,6 +18,7 @@ Para funcionar, la app se conecta a estos servicios, que reciben tu dirección I
 
 - **OpenStreetMap** (tile.openstreetmap.org): es el servicio de mapa predeterminado; descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.
 - **Otros servicios de mapa**, solo si los eliges en Ajustes: OpenStreetMap Francia, Humanitario y CyclOSM (tile.openstreetmap.fr y tile-cyclosm.openstreetmap.fr, operados por OpenStreetMap Francia) u OpenTopoMap (opentopomap.org). El servicio que elijas recibe la zona que estás viendo.
+- **Globo 3D** (solo si abres esa pantalla y aceptas): descarga imágenes del mapa de tile.openstreetmap.org y datos de elevación de Terrain Tiles, alojados en Amazon Web Services (s3.amazonaws.com). Ambos reciben tu dirección IP. La app añade su nombre y versión al identificador del navegador interno que dibuja el globo, como piden las normas de OpenStreetMap.
 - **Nominatim** (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.
 
 Cada servicio tiene su propia política de privacidad y Jps no controla cómo la aplican. La de la Fundación OpenStreetMap está en <https://osmfoundation.org/wiki/Privacy_Policy>.
@@ -26,7 +27,7 @@ Jps no hace ninguna conexión hasta que aceptas esta política la primera vez qu
 
 ## Datos guardados en tu dispositivo
 
-Se guardan solo en tu dispositivo: tus favoritos, tus últimas 8 búsquedas, tus ajustes, la última posición del mapa que viste y la caché de imágenes del mapa. Puedes borrar el historial y los favoritos en Ajustes, o borrarlo todo desinstalando la app o limpiando sus datos desde Android.
+Se guardan solo en tu dispositivo: tus favoritos, tus últimas 8 búsquedas, tus ajustes, la última posición del mapa que viste y la caché de imágenes del mapa y del globo 3D. Puedes borrar el historial y los favoritos en Ajustes, o borrarlo todo desinstalando la app o limpiando sus datos desde Android.
 
 ## Compartir
 

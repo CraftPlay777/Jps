@@ -71,6 +71,14 @@ final class Store {
         sp(c).edit().putString("map_source", id).apply();
     }
 
+    static boolean isGlobeConsentGiven(Context c) {
+        return sp(c).getBoolean("globe_consent", false);
+    }
+
+    static void setGlobeConsentGiven(Context c, boolean value) {
+        sp(c).edit().putBoolean("globe_consent", value).apply();
+    }
+
     // ----------------------------------------------------- última posición
 
     static boolean hasPosition(Context c) {

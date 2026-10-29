@@ -36,6 +36,10 @@
         <activity
             android:name=".InfoActivity"
             android:exported="false" />
+        <activity
+            android:name=".GlobeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false" />
     </application>
 
 </manifest>

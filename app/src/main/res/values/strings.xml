@@ -21,6 +21,12 @@
     <string name="location_denied">Permiso de ubicación denegado</string>
     <string name="no_app">No hay ninguna app para abrir esto</string>
 
+    <!-- Globo 3D -->
+    <string name="menu_globe">Globo 3D</string>
+    <string name="globe_title">Globo 3D</string>
+    <string name="globe_consent_title">Globo 3D</string>
+    <string name="globe_consent_message">El globo 3D descarga imágenes del mapa de OpenStreetMap y datos de elevación de Terrain Tiles, alojados en Amazon Web Services. Ambos servicios verán tu dirección IP. ¿Continuar?</string>
+
     <!-- Ficha del lugar -->
     <string name="share">Compartir</string>
     <string name="close">Cerrar</string>
@@ -86,13 +92,14 @@
 <ul>
 <li><b>OpenStreetMap</b> (tile.openstreetmap.org): es el servicio de mapa predeterminado; descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.</li>
 <li><b>Otros servicios de mapa</b>, solo si los eliges en Ajustes: OpenStreetMap Francia, Humanitario y CyclOSM (tile.openstreetmap.fr y tile-cyclosm.openstreetmap.fr, operados por OpenStreetMap Francia) u OpenTopoMap (opentopomap.org). El servicio que elijas recibe la zona que estás viendo.</li>
+<li><b>Globo 3D</b> (solo si abres esa pantalla y aceptas): descarga imágenes del mapa de tile.openstreetmap.org y datos de elevación de Terrain Tiles, alojados en Amazon Web Services (s3.amazonaws.com). Ambos reciben tu dirección IP. La app añade su nombre y versión al identificador del navegador interno que dibuja el globo, como piden las normas de OpenStreetMap.</li>
 <li><b>Nominatim</b> (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.</li>
 </ul>
 <p>Cada servicio tiene su propia política de privacidad y Jps no controla cómo la aplican. La de la Fundación OpenStreetMap está en <a href="https://osmfoundation.org/wiki/Privacy_Policy">osmfoundation.org/wiki/Privacy_Policy</a>.</p>
 <p>Jps no hace ninguna conexión hasta que aceptas esta política la primera vez que abres la app.</p>
 
 <h3>Datos guardados en tu dispositivo</h3>
-<p>Se guardan solo en tu dispositivo: tus favoritos, tus últimas 8 búsquedas, tus ajustes, la última posición del mapa que viste y la caché de imágenes del mapa. Puedes borrar el historial y los favoritos en Ajustes, o borrarlo todo desinstalando la app o limpiando sus datos desde Android.</p>
+<p>Se guardan solo en tu dispositivo: tus favoritos, tus últimas 8 búsquedas, tus ajustes, la última posición del mapa que viste y la caché de imágenes del mapa y del globo 3D. Puedes borrar el historial y los favoritos en Ajustes, o borrarlo todo desinstalando la app o limpiando sus datos desde Android.</p>
 
 <h3>Compartir</h3>
 <p>Jps solo comparte un lugar cuando tú lo pides, mediante el menú de compartir de Android. Lo que se comparte es el nombre del lugar y un enlace a OpenStreetMap.</p>
@@ -120,6 +127,7 @@
 <li>Datos del mapa: © colaboradores de OpenStreetMap, licencia ODbL. <a href="https://www.openstreetmap.org/copyright">openstreetmap.org/copyright</a></li>
 <li>Estilos de mapa opcionales: © OpenTopoMap (CC-BY-SA, con datos SRTM), CyclOSM, Humanitarian OpenStreetMap Team y OpenStreetMap Francia.</li>
 <li>Búsqueda de lugares: Nominatim.</li>
+<li>Globo 3D: relieve de Terrain Tiles (Tilezen/Mapzen), alojados en AWS, con datos de SRTM, ETOPO1 y otras fuentes públicas. Más información en <a href="https://aws.amazon.com/public-datasets/terrain/">aws.amazon.com/public-datasets/terrain</a>.</li>
 <li>Librería de mapas: osmdroid (Apache License 2.0).</li>
 <li>Iconos: Material Icons de Google (Apache License 2.0).</li>
 </ul>
