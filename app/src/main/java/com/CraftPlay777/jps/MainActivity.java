@@ -581,6 +581,17 @@ public class MainActivity extends Activity {
         });
         findViewById(R.id.btn_zoom_in).setOnClickListener(v -> map.getController().zoomIn());
         findViewById(R.id.btn_zoom_out).setOnClickListener(v -> map.getController().zoomOut());
+        // Pulsación larga: zoom máximo (+) o mínimo (−).
+        findViewById(R.id.btn_zoom_in).setOnLongClickListener(v -> {
+            map.getController().animateTo(map.getMapCenter(), map.getMaxZoomLevel(), 800L);
+            Toast.makeText(this, R.string.zoom_max, Toast.LENGTH_SHORT).show();
+            return true;
+        });
+        findViewById(R.id.btn_zoom_out).setOnLongClickListener(v -> {
+            map.getController().animateTo(map.getMapCenter(), map.getMinZoomLevel(), 800L);
+            Toast.makeText(this, R.string.zoom_min, Toast.LENGTH_SHORT).show();
+            return true;
+        });
         findViewById(R.id.btn_compass).setOnClickListener(v -> {
             map.setMapOrientation(0f);
             map.invalidate();

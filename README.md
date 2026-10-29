@@ -6,6 +6,7 @@ App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de
 
 - Búsqueda de lugares con historial de búsquedas recientes
 - Mi ubicación (GPS), zoom, escala y brújula para orientar al norte
+- Pulsación larga en + o − para ir directo al zoom máximo o mínimo
 - Rotación del mapa con dos dedos
 - Pin con pulsación larga (con su dirección)
 - Globo 3D separado: esfera con el mapa del mundo y modo Relieve 3D (montañas y océanos hundidos, con exageración ajustable)

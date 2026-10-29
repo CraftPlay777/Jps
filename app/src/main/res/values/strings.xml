@@ -10,6 +10,8 @@
     <string name="back">Atrás</string>
     <string name="zoom_in">Acercar</string>
     <string name="zoom_out">Alejar</string>
+    <string name="zoom_max">Zoom máximo</string>
+    <string name="zoom_min">Zoom mínimo</string>
     <string name="compass">Orientar al norte</string>
     <string name="layers">Servicio de mapa</string>
     <string name="my_location">Mi ubicación</string>
