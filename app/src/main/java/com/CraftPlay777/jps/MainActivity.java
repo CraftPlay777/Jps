@@ -104,6 +104,11 @@ public class MainActivity extends Activity {
         cfg.setUserAgentValue(getPackageName());
         cfg.setOsmdroidBasePath(new File(getCacheDir(), "osmdroid"));
         cfg.setOsmdroidTileCache(new File(getCacheDir(), "osmdroid/tiles"));
+        // Más teselas en memoria: al mover el mapa un poco o volver atrás no se recarga.
+        cfg.setCacheMapTileCount((short) 30);
+        cfg.setCacheMapTileOvershoot((short) 16);
+        // Las teselas guardadas se reutilizan 7 días (el mínimo que pide la política de OSM).
+        cfg.setExpirationOverrideDuration(7L * 24 * 60 * 60 * 1000);
 
         setContentView(R.layout.activity_main);
 
@@ -174,6 +179,11 @@ public class MainActivity extends Activity {
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
 
         applyTileSource();
+
+        // Mientras cargan las teselas: fondo plano del color del mapa en vez de la cuadrícula gris.
+        TilesOverlay tilesOverlay = map.getOverlayManager().getTilesOverlay();
+        tilesOverlay.setLoadingBackgroundColor(Color.parseColor("#F2EFE9"));
+        tilesOverlay.setLoadingLineColor(Color.parseColor("#F2EFE9"));
 
         map.getController().setZoom((double) Store.getZoom(this));
         map.getController().setCenter(new GeoPoint(Store.getLat(this), Store.getLon(this)));

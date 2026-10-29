@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 
 import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 
 /** Servicios de mapa de código abierto entre los que el usuario puede elegir. */
@@ -26,7 +25,12 @@ final class MapSources {
 
     /** El primero es el predeterminado. */
     static final Source[] ALL = {
-            new Source("osm", R.string.source_osm, TileSourceFactory.MAPNIK),
+            // Mismo host que usa la web de OpenStreetMap (una sola conexión segura reutilizable,
+            // en vez de a/b/c.tile...). Se mantiene el nombre "Mapnik" para conservar la caché.
+            new Source("osm", R.string.source_osm, new XYTileSource(
+                    "Mapnik", 0, 19, 256, ".png",
+                    new String[]{"https://tile.openstreetmap.org/"},
+                    OSM)),
 
             new Source("osmfr", R.string.source_osmfr, new XYTileSource(
                     "OSMFrance", 0, 19, 256, ".png",

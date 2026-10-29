@@ -14,7 +14,7 @@ App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de
 - Cómo llegar (abre otra app de mapas), compartir y copiar coordenadas
 - Servicio de mapa a elegir en Ajustes (OpenStreetMap, OSM Francia, Humanitario, CyclOSM u OpenTopoMap) y modo de mapa oscuro
 - Unidades métricas o imperiales
-- Recuerda la última posición del mapa
+- Recuerda la última posición del mapa y guarda las teselas 7 días para cargar más rápido
 - Política de privacidad dentro de la app, con aceptación en el primer arranque
 
 ## Datos y privacidad
