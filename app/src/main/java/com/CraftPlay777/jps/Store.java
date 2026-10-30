@@ -71,6 +71,49 @@ final class Store {
         sp(c).edit().putString("map_source", id).apply();
     }
 
+    // Fronteras, estados, colores y banderas (descargan datos, por eso piden permiso una vez).
+    static boolean isRegionsConsent(Context c) {
+        return sp(c).getBoolean("regions_consent", false);
+    }
+
+    static void setRegionsConsent(Context c, boolean value) {
+        sp(c).edit().putBoolean("regions_consent", value).apply();
+    }
+
+    static boolean isBorders(Context c) {
+        return sp(c).getBoolean("borders", false);
+    }
+
+    static void setBorders(Context c, boolean value) {
+        sp(c).edit().putBoolean("borders", value).apply();
+    }
+
+    /** Estados y provincias: solo cuentan si los bordes de países están activos. */
+    static boolean isStatesOn(Context c) {
+        return isBorders(c) && sp(c).getBoolean("states", false);
+    }
+
+    static void setStates(Context c, boolean value) {
+        sp(c).edit().putBoolean("states", value).apply();
+    }
+
+    static boolean isColors(Context c) {
+        return sp(c).getBoolean("colors", false);
+    }
+
+    static void setColors(Context c, boolean value) {
+        sp(c).edit().putBoolean("colors", value).apply();
+    }
+
+    /** Banderas como color: solo cuentan si el coloreado de países está activo. */
+    static boolean isFlagsOn(Context c) {
+        return isColors(c) && sp(c).getBoolean("flags", false);
+    }
+
+    static void setFlags(Context c, boolean value) {
+        sp(c).edit().putBoolean("flags", value).apply();
+    }
+
     static boolean isGlobeConsentGiven(Context c) {
         return sp(c).getBoolean("globe_consent", false);
     }

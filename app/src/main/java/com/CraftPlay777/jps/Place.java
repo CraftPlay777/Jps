@@ -10,6 +10,8 @@ final class Place {
     String osmType;   // "node", "way" o "relation"
     long osmId;
     double[] bbox;    // {sur, norte, oeste, este}
+    String countryCode; // código ISO de 2 letras en mayúsculas (ej. "AR")
+    boolean isCountry;  // true si el resultado es un país
 
     Place(String name, double lat, double lon) {
         this.name = name;

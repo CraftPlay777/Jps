@@ -44,6 +44,34 @@
 
             <TextView
                 style="@style/SectionTitle"
+                android:text="@string/regions_section" />
+
+            <Switch
+                android:id="@+id/sw_borders"
+                style="@style/SettingRow"
+                android:text="@string/sw_borders" />
+
+            <Switch
+                android:id="@+id/sw_states"
+                style="@style/SettingRow"
+                android:text="@string/sw_states" />
+
+            <Switch
+                android:id="@+id/sw_colors"
+                style="@style/SettingRow"
+                android:text="@string/sw_colors" />
+
+            <Switch
+                android:id="@+id/sw_flags"
+                style="@style/SettingRow"
+                android:text="@string/sw_flags" />
+
+            <TextView
+                style="@style/HintText"
+                android:text="@string/regions_hint" />
+
+            <TextView
+                style="@style/SectionTitle"
                 android:text="@string/settings_data" />
 
             <TextView

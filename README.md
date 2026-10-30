@@ -9,6 +9,7 @@ App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de
 - Pulsación larga en + o − para ir directo al zoom máximo o mínimo
 - Rotación del mapa con dos dedos
 - Pin con pulsación larga (con su dirección)
+- Bordes de países y de estados/provincias en rojo, colorear cada país y usar su bandera como color (mapa y globo 3D); al buscar un lugar se pinta solo esa zona
 - Globo 3D separado: esfera con el mapa del mundo y modo Relieve 3D (montañas y océanos hundidos, con exageración ajustable)
 - Contorno en rojo de la zona buscada (países, provincias, ciudades…) hasta que borras la búsqueda
 - Favoritos

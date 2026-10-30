@@ -57,6 +57,15 @@
     <string name="source_hot">Humanitario (HOT)</string>
     <string name="source_cyclosm">CyclOSM (ciclismo)</string>
     <string name="source_topo">OpenTopoMap (relieve)</string>
+    <string name="regions_section">Fronteras y colores</string>
+    <string name="sw_borders">Bordes de países (rojo)</string>
+    <string name="sw_states">Estados y provincias (rojo)</string>
+    <string name="sw_colors">Colorear cada país</string>
+    <string name="sw_flags">Usar la bandera como color</string>
+    <string name="regions_hint">Estados y provincias requieren los bordes de países; la bandera requiere colorear países. Los bordes y colores generales se ven hasta el zoom 9 y los estados desde el zoom 4. Al buscar un país, estado o ciudad se mantienen todas las líneas y solo se pinta esa zona: con su bandera si es un país, o con un color si es un estado o una ciudad. También funciona en el globo 3D.</string>
+    <string name="regions_consent_title">Descargar datos</string>
+    <string name="regions_consent_message">Estas opciones descargan datos desde GitHub (fronteras de Natural Earth y límites de estados y provincias de geoBoundaries) y banderas desde flagcdn.com. Esos servicios verán tu dirección IP. Los datos se guardan en tu dispositivo. ¿Continuar?</string>
+    <string name="regions_error">No se pudieron descargar las fronteras. Revisa tu internet.</string>
     <string name="setting_dark">Mapa oscuro</string>
     <string name="setting_imperial">Usar millas y pies</string>
     <string name="setting_keep_on">Mantener la pantalla encendida</string>
@@ -95,13 +104,14 @@
 <li><b>OpenStreetMap</b> (tile.openstreetmap.org): es el servicio de mapa predeterminado; descarga las imágenes del mapa, por lo que conoce la zona que estás viendo.</li>
 <li><b>Otros servicios de mapa</b>, solo si los eliges en Ajustes: OpenStreetMap Francia, Humanitario y CyclOSM (tile.openstreetmap.fr y tile-cyclosm.openstreetmap.fr, operados por OpenStreetMap Francia) u OpenTopoMap (opentopomap.org). El servicio que elijas recibe la zona que estás viendo.</li>
 <li><b>Globo 3D</b> (solo si abres esa pantalla y aceptas): descarga imágenes del mapa de tile.openstreetmap.org y datos de elevación de Terrain Tiles, alojados en Amazon Web Services (s3.amazonaws.com). Ambos reciben tu dirección IP. La app añade su nombre y versión al identificador del navegador interno que dibuja el globo, como piden las normas de OpenStreetMap.</li>
+<li><b>Fronteras, estados y banderas</b> (solo si activas esas opciones y aceptas): descarga las fronteras de los países desde raw.githubusercontent.com (Natural Earth), los límites de estados y provincias desde github.com (geoBoundaries) y las banderas desde flagcdn.com. Estos servicios reciben tu dirección IP y el código del país cuyos datos se piden. Los archivos se guardan en tu dispositivo.</li>
 <li><b>Nominatim</b> (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.</li>
 </ul>
 <p>Cada servicio tiene su propia política de privacidad y Jps no controla cómo la aplican. La de la Fundación OpenStreetMap está en <a href="https://osmfoundation.org/wiki/Privacy_Policy">osmfoundation.org/wiki/Privacy_Policy</a>.</p>
 <p>Jps no hace ninguna conexión hasta que aceptas esta política la primera vez que abres la app.</p>
 
 <h3>Datos guardados en tu dispositivo</h3>
-<p>Se guardan solo en tu dispositivo: tus favoritos, tus últimas 8 búsquedas, tus ajustes, la última posición del mapa que viste y la caché de imágenes del mapa y del globo 3D. Puedes borrar el historial y los favoritos en Ajustes, o borrarlo todo desinstalando la app o limpiando sus datos desde Android.</p>
+<p>Se guardan solo en tu dispositivo: tus favoritos, tus últimas 8 búsquedas, tus ajustes, la última posición del mapa que viste y la caché de imágenes del mapa y del globo 3D, y los archivos de fronteras, estados y banderas descargados. Puedes borrar el historial y los favoritos en Ajustes, o borrarlo todo desinstalando la app o limpiando sus datos desde Android.</p>
 
 <h3>Compartir</h3>
 <p>Jps solo comparte un lugar cuando tú lo pides, mediante el menú de compartir de Android. Lo que se comparte es el nombre del lugar y un enlace a OpenStreetMap.</p>
@@ -130,6 +140,9 @@
 <li>Estilos de mapa opcionales: © OpenTopoMap (CC-BY-SA, con datos SRTM), CyclOSM, Humanitarian OpenStreetMap Team y OpenStreetMap Francia.</li>
 <li>Búsqueda de lugares: Nominatim.</li>
 <li>Globo 3D: relieve de Terrain Tiles (Tilezen/Mapzen), alojados en AWS, con datos de SRTM, ETOPO1 y otras fuentes públicas. Más información en <a href="https://aws.amazon.com/public-datasets/terrain/">aws.amazon.com/public-datasets/terrain</a>.</li>
+<li>Fronteras de países: Natural Earth (dominio público).</li>
+<li>Límites de estados y provincias: geoBoundaries (William &amp; Mary geoLab), licencia CC BY 4.0.</li>
+<li>Banderas: Flagpedia (flagcdn.com).</li>
 <li>Librería de mapas: osmdroid (Apache License 2.0).</li>
 <li>Iconos: Material Icons de Google (Apache License 2.0).</li>
 </ul>

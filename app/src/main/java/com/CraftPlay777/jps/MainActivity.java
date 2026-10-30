@@ -13,6 +13,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -31,6 +33,9 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.config.IConfigurationProvider;
 import org.osmdroid.events.MapEventsReceiver;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
@@ -81,6 +86,14 @@ public class MainActivity extends Activity {
     private ScaleBarOverlay scale;
     private Marker marker;
     private FolderOverlay boundary;
+    private ZoneOverlay zoneOverlay;
+    private RegionsOverlay regionsOverlay;
+    private final Handler idleHandler = new Handler(Looper.getMainLooper());
+    private final Runnable requestStatesTask = () -> {
+        if (regionsOverlay != null) {
+            regionsOverlay.requestStates(map);
+        }
+    };
     private int boundaryToken;
     private Place selected;
     private String sourceId;
@@ -205,6 +218,25 @@ public class MainActivity extends Activity {
             }
         }));
 
+        // Bordes, estados y colores de países (debajo del resto de capas).
+        regionsOverlay = new RegionsOverlay(Regions.get(this),
+                getResources().getDisplayMetrics().density);
+        map.getOverlays().add(regionsOverlay);
+        Regions.get(this).setChangeListener(() -> map.postInvalidate());
+        map.addMapListener(new MapListener() {
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                scheduleStates();
+                return false;
+            }
+
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                scheduleStates();
+                return false;
+            }
+        });
+
         RotationGestureOverlay rotation = new RotationGestureOverlay(map);
         rotation.setEnabled(true);
         map.getOverlays().add(rotation);
@@ -249,8 +281,34 @@ public class MainActivity extends Activity {
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
+        applyRegions();
         updateCardInfo();
         map.invalidate();
+    }
+
+    /** Aplica las opciones de bordes, estados, colores y banderas. */
+    private void applyRegions() {
+        boolean consent = Store.isRegionsConsent(this);
+        regionsOverlay.setOptions(
+                consent && Store.isBorders(this),
+                consent && Store.isStatesOn(this),
+                consent && Store.isColors(this),
+                consent && Store.isFlagsOn(this));
+        if (regionsOverlay.isActive()) {
+            Regions.get(this).loadCountries(
+                    () -> {
+                        map.invalidate();
+                        scheduleStates();
+                    },
+                    () -> Toast.makeText(this, R.string.regions_error, Toast.LENGTH_SHORT).show());
+        }
+        scheduleStates();
+    }
+
+    /** Espera a que el mapa se detenga para pedir los estados de los países visibles. */
+    private void scheduleStates() {
+        idleHandler.removeCallbacks(requestStatesTask);
+        idleHandler.postDelayed(requestStatesTask, 600);
     }
 
     // -------------------------------------------------------------- búsqueda
@@ -466,7 +524,7 @@ public class MainActivity extends Activity {
                 List<List<GeoPoint>> rings = Nominatim.boundary(p.osmType, p.osmId, p.bbox);
                 runOnUiThread(() -> {
                     if (token == boundaryToken) {
-                        showBoundary(rings);
+                        showBoundary(rings, p);
                     }
                 });
             } catch (Exception ignored) {
@@ -475,7 +533,7 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void showBoundary(List<List<GeoPoint>> rings) {
+    private void showBoundary(List<List<GeoPoint>> rings, Place p) {
         if (rings.isEmpty()) {
             return;
         }
@@ -491,8 +549,39 @@ public class MainActivity extends Activity {
             folder.add(poly);
         }
         boundary = folder;
-        map.getOverlays().add(1, folder);
+        // Orden de dibujo: capa de países, relleno de la zona buscada y, encima, su contorno rojo.
+        int at = map.getOverlays().indexOf(regionsOverlay) + 1;
+        ZoneOverlay zone = createZone(rings, p);
+        if (zone != null) {
+            zoneOverlay = zone;
+            map.getOverlays().add(at++, zone);
+        }
+        map.getOverlays().add(at, folder);
         map.invalidate();
+    }
+
+    /** Relleno de la zona buscada: bandera si es un país, color si es estado o ciudad. */
+    private ZoneOverlay createZone(List<List<GeoPoint>> rings, Place p) {
+        if (!Store.isBorders(this) || !Store.isRegionsConsent(this)) {
+            return null;
+        }
+        List<GeoJson.Ring> zoneRings = Regions.ringsFromGeoPoints(rings);
+        if (zoneRings.isEmpty()) {
+            return null;
+        }
+        Regions regions = Regions.get(this);
+        boolean country = p.isCountry && p.countryCode != null;
+        int color = country
+                ? regions.colorForCode(p.countryCode, p.name)
+                : Regions.paletteColor(p.name != null ? p.name : "zona");
+        final ZoneOverlay zone = new ZoneOverlay(zoneRings, Regions.mainRing(zoneRings), color);
+        if (country) {
+            regions.flagLarge(p.countryCode, bmp -> {
+                zone.setFlag(bmp);
+                map.postInvalidate();
+            });
+        }
+        return zone;
     }
 
     private void clearBoundary() {
@@ -500,6 +589,11 @@ public class MainActivity extends Activity {
         if (boundary != null) {
             map.getOverlays().remove(boundary);
             boundary = null;
+            map.invalidate();
+        }
+        if (zoneOverlay != null) {
+            map.getOverlays().remove(zoneOverlay);
+            zoneOverlay = null;
             map.invalidate();
         }
     }
@@ -758,6 +852,7 @@ public class MainActivity extends Activity {
         if (consentDialog != null) {
             consentDialog.dismiss();
         }
+        idleHandler.removeCallbacks(requestStatesTask);
         io.shutdown();
         boundaryIo.shutdown();
         map.onDetach();
