@@ -75,7 +75,7 @@ final class Regions {
     // Fronteras de países: Natural Earth (dominio público), escala 1:50 millones.
     private static final String COUNTRIES_URL =
             "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson";
-    private static final String UA = "Jps/1.7 (Android; https://github.com/CraftPlay777/Jps)";
+    private static final String UA = "Jps/1.7.1 (Android; https://github.com/CraftPlay777/Jps)";
 
     private static Regions instance;
 
@@ -101,6 +101,7 @@ final class Regions {
     private final Map<String, Bitmap> flags = new ConcurrentHashMap<>();
     private final Set<String> flagJobs = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
     private volatile Runnable changeListener;
+    private volatile String lastError = "";
 
     private Regions(Context ctx) {
         this.ctx = ctx;
@@ -188,6 +189,16 @@ final class Regions {
         return countries;
     }
 
+    /** Motivo del último fallo de descarga o lectura (para mostrarlo al usuario). */
+    String lastError() {
+        return lastError;
+    }
+
+    static String describe(Throwable t) {
+        String m = t.getMessage();
+        return t.getClass().getSimpleName() + (m != null && !m.isEmpty() ? ": " + m : "");
+    }
+
     void setChangeListener(Runnable listener) {
         changeListener = listener;
     }
@@ -229,7 +240,8 @@ final class Regions {
                     }
                 }
                 result = list;
-            } catch (IOException | RuntimeException | OutOfMemoryError ignored) {
+            } catch (IOException | RuntimeException | OutOfMemoryError e) {
+                lastError = describe(e);
             }
             final List<Region> r = result;
             main.post(() -> finishCountries(r));
@@ -269,7 +281,8 @@ final class Regions {
                 }
                 states.put(iso3, all);
                 notifyChanged();
-            } catch (IOException | RuntimeException | OutOfMemoryError ignored) {
+            } catch (IOException | RuntimeException | OutOfMemoryError e) {
+                lastError = describe(e);
                 // Sin datos para ese país: no se vuelve a intentar hasta reiniciar la app.
             }
         });
@@ -292,7 +305,8 @@ final class Regions {
                         flags.put(k, bm);
                         notifyChanged();
                     }
-                } catch (IOException | RuntimeException | OutOfMemoryError ignored) {
+                } catch (IOException | RuntimeException | OutOfMemoryError e) {
+                lastError = describe(e);
                 }
             });
         }
@@ -311,7 +325,8 @@ final class Regions {
                 if (bm != null) {
                     main.post(() -> cb.onBitmap(bm));
                 }
-            } catch (IOException | RuntimeException | OutOfMemoryError ignored) {
+            } catch (IOException | RuntimeException | OutOfMemoryError e) {
+                lastError = describe(e);
             }
         });
     }
@@ -350,7 +365,7 @@ final class Regions {
         if (!dir.exists() && !dir.mkdirs()) {
             throw new IOException("no se pudo crear la carpeta");
         }
-        File tmp = File.createTempFile("dl", ".tmp", dir);
+        File tmp = File.createTempFile("jps_dl", ".tmp", dir);
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         try {
             conn.setRequestProperty("User-Agent", UA);

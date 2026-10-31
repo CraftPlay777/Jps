@@ -41,8 +41,11 @@ final class Mercator {
         Point a = new Point();
         Point b = new Point();
         Point cp = new Point();
-        pj.toPixels(new GeoPoint(lat, lon - 45.0), a);
-        pj.toPixels(new GeoPoint(lat, lon + 45.0), b);
+        // Dos puntos separados 90 grados y siempre dentro de [-180, 180], cerca del centro,
+        // para que la proyección no los coloque en copias distintas del mundo.
+        double lonA = Math.max(-180.0, Math.min(89.9, lon - 45.0));
+        pj.toPixels(new GeoPoint(lat, lonA), a);
+        pj.toPixels(new GeoPoint(lat, lonA + 90.0), b);
         double size = (b.x - a.x) * 4.0; // 90 grados = 1/4 del mundo
         if (size < 256.0) {
             return false;

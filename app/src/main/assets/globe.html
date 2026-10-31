@@ -671,7 +671,9 @@
 
     function getJson(url) {
       return fetch(url).then(function (r) {
-        if (!r.ok) throw new Error('http ' + r.status);
+        if (!r.ok) {
+          return r.text().then(function (t) { throw new Error(t || ('http ' + r.status)); });
+        }
         return r.json();
       });
     }
@@ -687,9 +689,9 @@
         if (opts.c && opts.f) loadFlags();
         scheduleStates();
         refreshOverlay(50);
-      }).catch(function () {
+      }).catch(function (e) {
         countriesBusy = false;
-        setStatus('No se pudieron cargar las fronteras.', 4000);
+        setStatus('No se pudieron cargar las fronteras (' + (e && e.message ? e.message : 'error') + ')', 6000);
       });
     }
 

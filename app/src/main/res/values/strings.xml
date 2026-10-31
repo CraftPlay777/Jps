@@ -65,7 +65,7 @@
     <string name="regions_hint">Estados y provincias requieren los bordes de países; la bandera requiere colorear países. Los bordes y colores generales se ven hasta el zoom 9 y los estados desde el zoom 4. Al buscar un país, estado o ciudad se mantienen todas las líneas y solo se pinta esa zona: con su bandera si es un país, o con un color si es un estado o una ciudad. También funciona en el globo 3D.</string>
     <string name="regions_consent_title">Descargar datos</string>
     <string name="regions_consent_message">Estas opciones descargan datos desde GitHub (fronteras de Natural Earth y límites de estados y provincias de geoBoundaries) y banderas desde flagcdn.com. Esos servicios verán tu dirección IP. Los datos se guardan en tu dispositivo. ¿Continuar?</string>
-    <string name="regions_error">No se pudieron descargar las fronteras. Revisa tu internet.</string>
+    <string name="regions_error">No se pudieron cargar las fronteras (%1$s)</string>
     <string name="setting_dark">Mapa oscuro</string>
     <string name="setting_imperial">Usar millas y pies</string>
     <string name="setting_keep_on">Mantener la pantalla encendida</string>

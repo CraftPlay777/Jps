@@ -300,7 +300,9 @@ public class MainActivity extends Activity {
                         map.invalidate();
                         scheduleStates();
                     },
-                    () -> Toast.makeText(this, R.string.regions_error, Toast.LENGTH_SHORT).show());
+                    () -> Toast.makeText(this,
+                            getString(R.string.regions_error, Regions.get(this).lastError()),
+                            Toast.LENGTH_LONG).show());
         }
         scheduleStates();
     }

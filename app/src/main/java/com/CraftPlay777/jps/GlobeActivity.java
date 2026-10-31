@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -123,12 +124,18 @@ public class GlobeActivity extends Activity {
                 f = regions.flagFile(path.substring(6, path.length() - 4), 160);
                 mime = "image/png";
             } else {
-                return dataResponse(404, "Not Found", "text/plain", new ByteArrayInputStream(new byte[0]));
+                return errorResponse("ruta no válida");
             }
             return dataResponse(200, "OK", mime, new FileInputStream(f));
-        } catch (IOException e) {
-            return dataResponse(404, "Not Found", "text/plain", new ByteArrayInputStream(new byte[0]));
+        } catch (IOException | RuntimeException e) {
+            return errorResponse(Regions.describe(e));
         }
+    }
+
+    /** Respuesta 404 cuyo cuerpo es el motivo del fallo (el globo lo muestra en pantalla). */
+    private static WebResourceResponse errorResponse(String message) {
+        return dataResponse(404, "Not Found", "text/plain",
+                new ByteArrayInputStream(message.getBytes(StandardCharsets.UTF_8)));
     }
 
     private static WebResourceResponse dataResponse(int code, String reason, String mime, InputStream data) {
