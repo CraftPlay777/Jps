@@ -4,13 +4,14 @@ Documento de traspaso. Está escrito para que una persona (o una IA) que no cono
 pueda entender qué hay, por qué se hizo así y cómo continuar sin romper nada.
 
 - **Repositorio:** github.com/CraftPlay777/Jps · **Paquete:** `com.CraftPlay777.jps`
-- **Versión al escribir esto:** 1.9 (versionCode 11)
+- **Versión al escribir esto:** 2.0 (versionCode 12)
 - **Stack:** Java, Android sin AppCompat (clases `Activity` planas), una sola dependencia: osmdroid 6.1.18
 - **Android:** minSdk 23, compileSdk/targetSdk 34 · AGP 8.5.2 · Gradle 8.9 · JDK 17
-- **Idioma de la interfaz:** español (los textos están en `res/values/strings.xml`)
+- **Idiomas de la interfaz:** español (por defecto, `res/values/strings.xml`), inglés (`values-en`), chino mandarín (`values-zh`) y francés (`values-fr`)
 
-> **Estado a tener en cuenta:** las versiones 1.8 (tema claro/oscuro y "Cómo llegar") y 1.9 (fotos e
-> información de Wikipedia en la ficha) se escribieron y se revisaron con las herramientas de `tools/`, pero
+> **Estado a tener en cuenta:** las versiones 1.8 (tema claro/oscuro y "Cómo llegar") y 2.0 (idiomas)
+> se escribieron y revisaron con `tools/`; la 1.9 (fotos e información de Wikipedia) ya la probó el dueño y funciona.
+> Las anteriores se escribieron y se revisaron con las herramientas de `tools/`, pero
 > **todavía no se han compilado en GitHub Actions ni probado en el móvil**. Lo primero al retomar el proyecto es compilarla y
 > corregir lo que salga. Hasta la 1.7.1 todo se compiló y el dueño la probó ("funciona perfecto").
 
@@ -28,6 +29,7 @@ servicios abiertos basados en OpenStreetMap. Funciones actuales:
 - **Globo 3D** separado: esfera con el mapa y modo "Relieve 3D" (montañas y océanos hundidos).
 - **Cómo llegar** dentro de la app: vehículo, velocidad personalizada, tiempo, pasos y "no salir del país".
 - **Fotos e información** de Wikipedia en la ficha del lugar (galería de Wikimedia Commons + resumen).
+- **Cuatro idiomas** (es, en, zh, fr): se elige al primer inicio y se cambia en Ajustes.
 - Tema blanco, negro o según el dispositivo.
 - Política de privacidad dentro de la app y aviso de aceptación antes de cualquier conexión.
 
@@ -67,7 +69,7 @@ cd /storage/emulated/0/Download/ && mkdir -p Jps JpsMemory && find Jps -mindepth
    propias (por ejemplo `Regions.BitmapCallback`).
 6. **Nunca tragarse una excepción en silencio.** Mostrar la causa real (ver `Regions.lastError()`).
    Un fallo oculto ya costó una versión entera (ver sección 8).
-7. **Textos de interfaz en `strings.xml`**, en español, con tipografía correcta (…, ¿?, ¡!).
+7. **Textos de interfaz en `strings.xml`** (español) y **siempre traducidos** a `values-en`, `values-zh` y `values-fr`, con tipografía correcta (…, ¿?, ¡!). Nada de textos fijos en Java. `check_project.py` falla si falta una traducción o cambian los `%s`/`%d`. Usar ’ y “ ” en vez de ' y " para no escapar.
 
 ## 4. Mapa del código (`app/src/main/java/com/CraftPlay777/jps/`)
 
@@ -75,6 +77,7 @@ cd /storage/emulated/0/Download/ && mkdir -p Jps JpsMemory && find Jps -mindepth
 |---|---|
 | `MainActivity` | Pantalla principal (~950 líneas): mapa, búsqueda, ficha del lugar, menú, consentimiento, conexión de todos los overlays y controladores. Es el archivo más grande y el primero que conviene dividir. |
 | `BaseActivity` | Clase base de todas las pantallas: aplica el tema elegido y se recrea si cambia. **Toda `Activity` nueva debe heredar de ella.** |
+| `Lang` | Idiomas (es, en, zh, fr): aplica el idioma elegido al contexto (`Lang.wrap`, llamado desde `Theming.wrap`) y muestra el diálogo de elección. |
 | `Theming` | Fuerza el modo día/noche de la app envolviendo el contexto con un `uiMode` forzado; así se aplican los recursos de `values-night/`. |
 | `Store` | Todo lo que se guarda en el móvil (`SharedPreferences` "jps"): ajustes, consentimientos, favoritos, historial, última posición. |
 | `Place` | Un lugar: nombre, coordenadas, datos de OSM (tipo, id, caja) y si es país. |
@@ -162,6 +165,18 @@ invierte las teselas.
   propio `info_consent`. Las fotos nunca se guardan en disco.
 - Limitación: los favoritos y los pines de pulsación larga no traen datos de OSM, así que no muestran info.
 
+### 5.6b Idiomas
+- `Store.getLang` guarda el código (`es`, `en`, `zh`, `fr`); `null` = aún no eligió. En el primer inicio
+  `MainActivity.askLanguage()` muestra `Lang.showChooser` (sin poder cerrarlo) **antes** del permiso de privacidad.
+  También se cambia en Ajustes → Idioma. Al elegir se llama a `recreate()`; `BaseActivity` recrea las demás
+  pantallas al volver si el idioma cambió.
+- `Lang.wrap` fija el `Locale` en el contexto y en `Locale.setDefault`, así Nominatim (`Accept-Language`),
+  Wikipedia (`WikiInfo.preferredLang`) y los formatos de números siguen el idioma elegido.
+- Las instrucciones de la ruta (`Routing.instruction`) y los errores usan `strings.xml` (`step_*`, `dir_*`,
+  `msg_*`); las duraciones, `dur_*`. El globo recibe `?l=xx` y tiene su diccionario `TXT` en `globe.html`.
+- Para añadir un idioma: carpeta `values-xx`, código en `Lang.CODES`/`NAMES`, diccionario del globo y
+  `check_project.py`.
+
 ### 5.7 Cómo llegar
 - `RouteController` abre el panel (`route_panel`), pide permiso la primera vez y calcula con
   `Routing.fetch`: `https://routing.openstreetmap.de/routed-{car|bike|foot}/route/v1/driving/...`
@@ -224,7 +239,7 @@ Después, `git push` y mirar **Actions → Build APK**. Si falla, copiar el erro
 
 ## 10. Siguientes pasos sugeridos (por orden)
 
-1. **Compilar y probar la 1.9** (fotos e información, tema claro/oscuro y rutas) y corregir lo que falle.
+1. **Compilar y probar la 2.0** (idiomas, tema claro/oscuro y rutas) y corregir lo que falle.
 2. Rutas: elegir el origen tocando el mapa o buscándolo, paradas intermedias, ver las alternativas,
    compartir la ruta y guardar rutas recientes.
 3. Dividir `MainActivity` en controladores (búsqueda, zona buscada, regiones), como ya se hizo con
@@ -234,7 +249,7 @@ Después, `git push` y mirar **Actions → Build APK**. Si falla, copiar el erro
 5. Firma de la APK de publicación y versiones automáticas.
 6. Mapa vectorial (MapLibre + OpenFreeMap): se vería nítido y fluido, pero aumenta el tamaño de la
    app y obliga a rehacer los overlays. Valorarlo con calma por el móvil de pruebas.
-7. Inglés como segundo idioma y mejoras de accesibilidad.
+7. Mejoras de accesibilidad (los idiomas ya están en la 2.0).
 8. Mapas sin conexión: **no** descargar teselas de los servidores de OSM (está prohibido); haría falta
    un proveedor que lo permita o un servidor propio.
 
@@ -263,4 +278,5 @@ Después, `git push` y mirar **Actions → Build APK**. Si falla, copiar el erro
 | 1.6 | Pulsación larga en + / − para zoom máximo o mínimo |
 | 1.7 / 1.7.1 | Bordes, estados, colores y banderas (mapa y globo); arreglo de la descarga |
 | 1.8 | Tema blanco/negro/dispositivo y "Cómo llegar" dentro de la app *(sin probar aún)* |
-| 1.9 | Fotos e información de Wikipedia en la ficha del lugar *(sin probar aún)* |
+| 1.9 | Fotos e información de Wikipedia en la ficha del lugar |
+| 2.0 | Cuatro idiomas: español, inglés, chino mandarín y francés *(sin probar aún)* |

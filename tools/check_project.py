@@ -115,6 +115,26 @@ try:
 except (OSError, ValueError) as e:
     errors.append(f"country_colors.js no se puede leer: {e}")
 
+# 7) Idiomas: todos los strings.xml deben tener las mismas claves y los mismos %s/%d
+res_dir = os.path.join(ROOT, "app/src/main/res")
+def load_strings(path):
+    return dict(re.findall(r'<string name="(\w+)">(.*?)</string>', read(path), flags=re.S))
+base_strings = load_strings(os.path.join(res_dir, "values/strings.xml"))
+fmt = lambda v: sorted(re.findall(r"%\d\$0?\d*[sd]", v))
+for lang in ("en", "fr", "zh"):
+    p = os.path.join(res_dir, f"values-{lang}/strings.xml")
+    if not os.path.exists(p):
+        errors.append(f"falta values-{lang}/strings.xml")
+        continue
+    other = load_strings(p)
+    for k in sorted(set(base_strings) - set(other)):
+        errors.append(f"values-{lang}: falta la traducción de '{k}'")
+    for k in sorted(set(other) - set(base_strings)):
+        errors.append(f"values-{lang}: '{k}' no existe en values/strings.xml")
+    for k in sorted(set(base_strings) & set(other)):
+        if fmt(base_strings[k]) != fmt(other[k]):
+            errors.append(f"values-{lang}: '{k}' tiene distintos %s/%d que el español")
+
 gradle = read(os.path.join(ROOT, "app/build.gradle"))
 ver = re.search(r'versionName "([^"]+)"', gradle)
 code = re.search(r"versionCode (\d+)", gradle)

@@ -100,6 +100,7 @@ public class MainActivity extends BaseActivity {
     private String sourceId;
     private boolean showingHistory;
     private AlertDialog consentDialog;
+    private AlertDialog languageDialog;
 
     private EditText searchInput;
     private View clearButton;
@@ -150,6 +151,17 @@ public class MainActivity extends BaseActivity {
     }
 
     // ------------------------------------------------------------- privacidad
+
+    /** Primer inicio: pregunta el idioma antes que nada. Devuelve true si el diálogo está abierto. */
+    private boolean askLanguage() {
+        if (Store.isLangChosen(this)) {
+            return false;
+        }
+        if (languageDialog == null || !languageDialog.isShowing()) {
+            languageDialog = Lang.showChooser(this, false);
+        }
+        return true;
+    }
 
     private void maybeAskConsent() {
         if (Store.isConsentGiven(this)) {
@@ -887,7 +899,9 @@ public class MainActivity extends BaseActivity {
         if (Store.isConsentGiven(this) && hasLocationPermission()) {
             myLocation.enableMyLocation();
         }
-        maybeAskConsent();
+        if (!askLanguage()) {
+            maybeAskConsent();
+        }
     }
 
     @Override
@@ -905,6 +919,9 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         if (consentDialog != null) {
             consentDialog.dismiss();
+        }
+        if (languageDialog != null) {
+            languageDialog.dismiss();
         }
         idleHandler.removeCallbacks(requestStatesTask);
         io.shutdown();

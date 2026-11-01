@@ -15,5 +15,5 @@ fs.writeFileSync('globe.js', m[1]);
 node --check globe.js
 node test_geom.js | tail -1
 node test2.js | tail -1
-node smoke.js | tail -1
+node smoke.js | tail -2
 echo "Pruebas del globo: OK"

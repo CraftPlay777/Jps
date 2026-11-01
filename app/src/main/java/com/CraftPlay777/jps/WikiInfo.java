@@ -28,8 +28,13 @@ final class WikiInfo {
 
     // Wikimedia pide un User-Agent que identifique la app.
     private static final String USER_AGENT =
-            "Jps/1.9 (Android; https://github.com/CraftPlay777/Jps)";
-    private static final String DEFAULT_LANG = "es";
+            "Jps/2.0 (Android; https://github.com/CraftPlay777/Jps)";
+
+    /** Idioma de Wikipedia: el de la app (la clase Lang lo deja como idioma por defecto). */
+    private static String preferredLang() {
+        String l = Locale.getDefault().getLanguage();
+        return Lang.indexOf(l) >= 0 ? l : "es";
+    }
     private static final int MAX_IMAGES = 12;
     private static final int MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 
@@ -53,22 +58,23 @@ final class WikiInfo {
 
     /** Devuelve la información del lugar, o null si Wikipedia no tiene un artículo para él. */
     static Info fetch(Place p) throws IOException, JSONException {
-        String lang = DEFAULT_LANG;
+        final String pref = preferredLang();
+        String lang = pref;
         String title = null;
 
         if (p.wikipedia != null && p.wikipedia.indexOf(':') > 0) {
             lang = p.wikipedia.substring(0, p.wikipedia.indexOf(':')).toLowerCase(Locale.ROOT);
             title = p.wikipedia.substring(p.wikipedia.indexOf(':') + 1);
-            if (!DEFAULT_LANG.equals(lang)) {
-                // Preferimos el artículo en español si existe.
-                String es = spanishTitle(lang, title);
-                if (es != null) {
-                    lang = DEFAULT_LANG;
-                    title = es;
+            if (!pref.equals(lang)) {
+                // Preferimos el artículo en el idioma de la app si existe.
+                String other = translatedTitle(lang, title, pref);
+                if (other != null) {
+                    lang = pref;
+                    title = other;
                 }
             }
         } else if (isZone(p)) {
-            title = searchTitle(searchQuery(p.name));
+            title = searchTitle(pref, searchQuery(p.name));
         }
         if (title == null || title.isEmpty()) {
             return null;
@@ -174,8 +180,8 @@ final class WikiInfo {
         return sb.toString();
     }
 
-    private static String searchTitle(String query) throws IOException, JSONException {
-        JSONObject root = new JSONObject(get("https://" + DEFAULT_LANG
+    private static String searchTitle(String lang, String query) throws IOException, JSONException {
+        JSONObject root = new JSONObject(get("https://" + lang
                 + ".wikipedia.org/w/api.php?action=query&format=json&list=search&srlimit=1&srsearch="
                 + URLEncoder.encode(query, "UTF-8")));
         JSONObject q = root.optJSONObject("query");
@@ -186,19 +192,20 @@ final class WikiInfo {
         return list.getJSONObject(0).optString("title", null);
     }
 
-    private static String spanishTitle(String lang, String title) {
+    /** Título del mismo artículo en otro idioma de Wikipedia (null si no existe). */
+    private static String translatedTitle(String lang, String title, String target) {
         try {
             JSONObject root = new JSONObject(get("https://" + lang
                     + ".wikipedia.org/w/api.php?action=query&format=json&prop=langlinks&lllang="
-                    + DEFAULT_LANG + "&redirects=1&titles=" + URLEncoder.encode(title, "UTF-8")));
+                    + target + "&redirects=1&titles=" + URLEncoder.encode(title, "UTF-8")));
             JSONObject pages = root.getJSONObject("query").getJSONObject("pages");
             Iterator<String> keys = pages.keys();
             while (keys.hasNext()) {
                 JSONArray links = pages.getJSONObject(keys.next()).optJSONArray("langlinks");
                 if (links != null && links.length() > 0) {
-                    String es = links.getJSONObject(0).optString("*", "");
-                    if (!es.isEmpty()) {
-                        return es;
+                    String translated = links.getJSONObject(0).optString("*", "");
+                    if (!translated.isEmpty()) {
+                        return translated;
                     }
                 }
             }

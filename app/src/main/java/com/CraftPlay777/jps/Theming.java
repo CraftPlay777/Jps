@@ -17,7 +17,8 @@ final class Theming {
      * Fuerza el modo día/noche de la app sin depender del sistema. Con eso se aplican
      * automáticamente los recursos de values-night (colores y tema oscuro).
      */
-    static Context wrap(Context base) {
+    static Context wrap(Context context) {
+        Context base = Lang.wrap(context); // idioma elegido
         int mode = Store.getThemeMode(base);
         if (mode == DEVICE) {
             return base;

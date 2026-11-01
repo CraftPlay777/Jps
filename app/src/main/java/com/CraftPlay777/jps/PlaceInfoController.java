@@ -132,7 +132,7 @@ final class PlaceInfoController {
 
     private void load(Place p) {
         final int myToken = token;
-        final String cacheKey = p.osmType + p.osmId;
+        final String cacheKey = java.util.Locale.getDefault().getLanguage() + p.osmType + p.osmId;
         WikiInfo.Info cached;
         synchronized (infoCache) {
             cached = infoCache.get(cacheKey);

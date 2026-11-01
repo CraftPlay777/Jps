@@ -34,7 +34,8 @@ function el(id) {
   return e;
 }
 const els = {};
-const document = { getElementById: id => els[id] || (els[id] = el(id)), createElement: () => el('canvas-x') };
+const spans = [0, 1, 2, 3].map(i => el('span' + i));
+const document = { getElementById: id => els[id] || (els[id] = el(id)), createElement: () => el('canvas-x'), querySelectorAll: () => spans };
 let frames = 0;
 const timers = [];
 const fetched = [];
@@ -44,7 +45,7 @@ const countriesJson = { features: [
 const statesJson = { features: [ { geometry: { type: 'Polygon', coordinates: [[[-70,-40],[-60,-40],[-60,-30],[-70,-30],[-70,-40]]] } } ] };
 const sandbox = {
   document, console, Math, Float32Array, Uint8Array, Uint16Array, Object, parseInt, parseFloat, RegExp, Array, JSON, Promise,
-  location: { hash: '#-12.04,-77.03', search: '?b=1&s=1&c=1&f=1' },
+  location: { hash: '#-12.04,-77.03', search: '?l=fr&b=1&s=1&c=1&f=1' },
   window: null,
   Image: function () { const self = this; setTimeout(() => self.onload && self.onload(), 0); },
   fetch: url => { fetched.push(url); return Promise.resolve({ ok: true, json: () => Promise.resolve(/states/.test(url) ? statesJson : countriesJson) }); },
@@ -88,6 +89,9 @@ try { vm.runInContext(js, sandbox); } catch (e) { console.log('ERROR AL EJECUTAR
   const need = ['texImage2D','generateMipmap','drawElements','drawArrays','uniform1i','bufferData','pixelStorei'];
   console.log('gl usado:', need.map(n => n + '=' + (glCalls[n] || 0)).join(' '));
   const missing = need.filter(n => !glCalls[n]);
+  // idioma: con ?l=fr los textos fijos salen en francés
+  const okLang = els.btnLayers.textContent === 'Calques' && spans[0].textContent.indexOf('Frontières') === 0;
+  if (!okLang) console.log('IDIOMA: los textos del globo no se tradujeron');
   console.log(missing.length ? 'FALTAN llamadas GL: ' + missing : 'PRUEBA DE HUMO OK');
-  process.exit(missing.length ? 1 : 0);
+  process.exit(missing.length || !okLang ? 1 : 0);
 })();

@@ -406,6 +406,44 @@
       ' if (d > 0.5) discard;' +
       ' gl_FragColor = d > 0.34 ? vec4(1.0) : vec4(0.92, 0.15, 0.12, 1.0); }';
 
+    // ----- Idioma (lo elige la app y lo pasa en la dirección: ?l=es|en|zh|fr) -----
+    var LANG = (/[?&]l=([a-z]{2})/.exec(location.search) || [0, 'es'])[1];
+    var TXT = {
+      es: { loading: 'Cargando…', noWebgl: 'Tu dispositivo no admite WebGL.', gfx: 'Error de gráficos: ',
+        borders: 'Bordes de países (rojo)', states: 'Estados y provincias (rojo)', colors: 'Colorear cada país',
+        flags: 'Usar la bandera como color', layers: 'Capas', mode: 'Modo: ', globe: 'Globo', relief: 'Relieve 3D',
+        spin: 'Girar solo', stopSpin: 'Parar giro', home: 'Mi zona', reliefLabel: 'Relieve',
+        mapFail: 'No se pudo descargar el mapa. Revisa tu conexión.', someImgs: 'Algunas imágenes no se pudieron descargar.',
+        reliefNA: 'Relieve no disponible. Se muestra el globo liso.', loadBorders: 'Cargando fronteras…',
+        borderFail: 'No se pudieron cargar las fronteras (', noStates: 'No hay datos de estados para este país.',
+        loadStates: 'Cargando estados…', err: 'error', credit: 'Relieve: Terrain Tiles (AWS)' },
+      en: { loading: 'Loading…', noWebgl: 'Your device does not support WebGL.', gfx: 'Graphics error: ',
+        borders: 'Country borders (red)', states: 'States and provinces (red)', colors: 'Color each country',
+        flags: 'Use the flag as color', layers: 'Layers', mode: 'Mode: ', globe: 'Globe', relief: '3D relief',
+        spin: 'Auto spin', stopSpin: 'Stop spin', home: 'My area', reliefLabel: 'Relief',
+        mapFail: "Couldn't download the map. Check your connection.", someImgs: "Some images couldn't be downloaded.",
+        reliefNA: 'Relief not available. Showing the smooth globe.', loadBorders: 'Loading borders…',
+        borderFail: "Couldn't load the borders (", noStates: 'No state data for this country.',
+        loadStates: 'Loading states…', err: 'error', credit: 'Relief: Terrain Tiles (AWS)' },
+      zh: { loading: '加载中…', noWebgl: '你的设备不支持 WebGL。', gfx: '图形错误：',
+        borders: '国家边界（红色）', states: '州和省（红色）', colors: '给每个国家着色',
+        flags: '用国旗作为颜色', layers: '图层', mode: '模式：', globe: '地球', relief: '3D 地形',
+        spin: '自动旋转', stopSpin: '停止旋转', home: '我的位置', reliefLabel: '地形',
+        mapFail: '无法下载地图，请检查网络连接。', someImgs: '部分图片无法下载。',
+        reliefNA: '地形不可用，显示平滑地球。', loadBorders: '正在加载边界…',
+        borderFail: '无法加载边界（', noStates: '该国家没有州/省数据。',
+        loadStates: '正在加载州/省…', err: '错误', credit: '地形：Terrain Tiles (AWS)' },
+      fr: { loading: 'Chargement…', noWebgl: 'Votre appareil ne prend pas en charge WebGL.', gfx: 'Erreur graphique : ',
+        borders: 'Frontières des pays (rouge)', states: 'États et provinces (rouge)', colors: 'Colorier chaque pays',
+        flags: 'Utiliser le drapeau comme couleur', layers: 'Calques', mode: 'Mode : ', globe: 'Globe', relief: 'Relief 3D',
+        spin: 'Rotation auto', stopSpin: 'Arrêter la rotation', home: 'Ma zone', reliefLabel: 'Relief',
+        mapFail: 'Impossible de télécharger la carte. Vérifiez votre connexion.', someImgs: "Certaines images n'ont pas pu être téléchargées.",
+        reliefNA: 'Relief indisponible. Globe lisse affiché.', loadBorders: 'Chargement des frontières…',
+        borderFail: 'Impossible de charger les frontières (', noStates: "Aucune donnée d'États pour ce pays.",
+        loadStates: 'Chargement des États…', err: 'erreur', credit: 'Relief : Terrain Tiles (AWS)' }
+    };
+    function T(k) { return (TXT[LANG] || TXT.es)[k] || TXT.es[k]; }
+
     var canvas = document.getElementById('c');
     var statusEl = document.getElementById('status');
     var btnMode = document.getElementById('btnMode');
@@ -413,6 +451,18 @@
     var btnHome = document.getElementById('btnHome');
     var exagBox = document.getElementById('exagBox');
     var exagInput = document.getElementById('exag');
+
+    // Textos fijos de la página en el idioma elegido.
+    (function () {
+      var spans = document.querySelectorAll('#panel label span');
+      var keys = ['borders', 'states', 'colors', 'flags'];
+      for (var i = 0; i < spans.length && i < keys.length; i++) spans[i].textContent = T(keys[i]);
+      document.getElementById('btnLayers').textContent = T('layers');
+      btnHome.textContent = T('home');
+      if (exagBox.firstChild) exagBox.firstChild.nodeValue = T('reliefLabel') + ' ';
+      statusEl.textContent = T('loading');
+      document.getElementById('credits').innerHTML = '© OpenStreetMap contributors<br>' + T('credit');
+    })();
 
     function setStatus(text, hideAfterMs) {
       statusEl.style.display = text ? 'block' : 'none';
@@ -424,7 +474,7 @@
 
     var gl = canvas.getContext('webgl', { antialias: true, alpha: false }) ||
              canvas.getContext('experimental-webgl');
-    if (!gl) { setStatus('Tu dispositivo no admite WebGL.'); return; }
+    if (!gl) { setStatus(T('noWebgl')); return; }
 
     if (gl.getParameter(gl.MAX_TEXTURE_SIZE) < 2048) TEX_Z = 2;
 
@@ -445,7 +495,7 @@
 
     var prog, pprog;
     try { prog = program(VS, FS); pprog = program(PVS, PFS); }
-    catch (e) { setStatus('Error de gráficos: ' + e.message); return; }
+    catch (e) { setStatus(T('gfx') + e.message); return; }
 
     var loc = {
       aPos: gl.getAttribLocation(prog, 'aPos'), aNorm: gl.getAttribLocation(prog, 'aNorm'),
@@ -501,9 +551,9 @@
 
     function updateButtons() {
       btnMode.disabled = !reliefReady;
-      btnMode.textContent = 'Modo: ' + (relief ? 'Relieve 3D' : 'Globo');
+      btnMode.textContent = T('mode') + (relief ? T('relief') : T('globe'));
       exagBox.style.display = (reliefReady && relief) ? 'flex' : 'none';
-      btnSpin.textContent = spin ? 'Parar giro' : 'Girar solo';
+      btnSpin.textContent = spin ? T('stopSpin') : T('spin');
     }
 
     // Textura del mapa (OpenStreetMap, Mercator, z=3 -> 2048 px)
@@ -545,7 +595,7 @@
 
     function progress() {
       if (texFinished && eleFinished) return;
-      setStatus('Cargando… ' + (texDone + eleDone) + '/' + (texTotal + eleTotal));
+      setStatus(T('loading') + ' ' + (texDone + eleDone) + '/' + (texTotal + eleTotal));
     }
 
     // 1) Mapa
@@ -562,13 +612,13 @@
       function (ok, total) {
         texFinished = true;
         if (ok === 0) {
-          setStatus('No se pudo descargar el mapa. Revisa tu conexión.');
+          setStatus(T('mapFail'));
         } else {
           gl.bindTexture(gl.TEXTURE_2D, texture);
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texCanvas);
           gl.generateMipmap(gl.TEXTURE_2D);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-          if (ok < total) setStatus('Algunas imágenes no se pudieron descargar.', 3500);
+          if (ok < total) setStatus(T('someImgs'), 3500);
         }
         texCanvas.width = 1; texCanvas.height = 1; // libera memoria
         if (eleFinished && ok > 0 && ok === total) setStatus('');
@@ -604,7 +654,7 @@
           updateGeometry();
           if (texFinished && ok === total) setStatus('');
         } catch (e) {
-          setStatus('Relieve no disponible. Se muestra el globo liso.', 4000);
+          setStatus(T('reliefNA'), 4000);
         }
         eleCanvas.width = 1; eleCanvas.height = 1;
         updateButtons();
@@ -681,7 +731,7 @@
     function ensureCountries() {
       if (countries || countriesBusy) return;
       countriesBusy = true;
-      setStatus('Cargando fronteras…');
+      setStatus(T('loadBorders'));
       getJson('https://jps.local/countries.geojson').then(function (json) {
         countries = parseCountries(json);
         countriesBusy = false;
@@ -691,7 +741,7 @@
         refreshOverlay(50);
       }).catch(function (e) {
         countriesBusy = false;
-        setStatus('No se pudieron cargar las fronteras (' + (e && e.message ? e.message : 'error') + ')', 6000);
+        setStatus(T('borderFail') + (e && e.message ? e.message : T('err')) + ')', 6000);
       });
     }
 
@@ -726,13 +776,13 @@
       var c = countryAt(countries, pitch / DEG, -yaw / DEG);
       if (!c || !c.iso3 || statesData[c.iso3] || statesTried[c.iso3]) return;
       statesTried[c.iso3] = true;
-      setStatus('Cargando estados…');
+      setStatus(T('loadStates'));
       getJson('https://jps.local/states/' + c.iso3 + '.geojson').then(function (json) {
         statesData[c.iso3] = parseStates(json);
         setStatus('');
         refreshOverlay(50);
       }).catch(function () {
-        setStatus('No hay datos de estados para este país.', 3000);
+        setStatus(T('noStates'), 3000);
       });
     }
 

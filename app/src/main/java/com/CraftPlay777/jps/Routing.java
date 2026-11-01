@@ -1,5 +1,6 @@
 package com.CraftPlay777.jps;
 
+import android.content.Context;
 import android.location.Location;
 
 import org.json.JSONArray;
@@ -49,7 +50,7 @@ final class Routing {
     }
 
     private static final String BASE = "https://routing.openstreetmap.de/routed-";
-    private static final String UA = "Jps/1.8 (Android; https://github.com/CraftPlay777/Jps)";
+    private static final String UA = "Jps/2.0 (Android; https://github.com/CraftPlay777/Jps)";
     /** Tramo mínimo en otro país para considerar que la ruta "sale" (la frontera 1:50M no es exacta). */
     private static final double FOREIGN_RUN_METERS = 6000;
 
@@ -59,7 +60,7 @@ final class Routing {
     }
 
     /** Pide la ruta (y alternativas). Devuelve al menos una ruta o lanza excepción. */
-    static List<Route> fetch(String profile, GeoPoint from, GeoPoint to) throws IOException, JSONException {
+    static List<Route> fetch(Context ctx, String profile, GeoPoint from, GeoPoint to) throws IOException, JSONException {
         String url = BASE + profile + "/route/v1/driving/"
                 + String.format(Locale.US, "%.6f,%.6f;%.6f,%.6f",
                 from.getLongitude(), from.getLatitude(), to.getLongitude(), to.getLatitude())
@@ -78,7 +79,7 @@ final class Routing {
         JSONArray routes = root.getJSONArray("routes");
         List<Route> out = new ArrayList<>();
         for (int i = 0; i < routes.length(); i++) {
-            out.add(parseRoute(routes.getJSONObject(i)));
+            out.add(parseRoute(ctx, routes.getJSONObject(i)));
         }
         if (out.isEmpty()) {
             throw new RouteException("NoRoute", "NoRoute");
@@ -86,7 +87,7 @@ final class Routing {
         return out;
     }
 
-    private static Route parseRoute(JSONObject o) throws JSONException {
+    private static Route parseRoute(Context ctx, JSONObject o) throws JSONException {
         Route r = new Route();
         r.meters = o.getDouble("distance");
         r.seconds = o.getDouble("duration");
@@ -105,7 +106,7 @@ final class Routing {
                 for (int i = 0; i < steps.length(); i++) {
                     JSONObject s = steps.getJSONObject(i);
                     Step st = new Step();
-                    st.text = instruction(s);
+                    st.text = instruction(ctx, s);
                     st.meters = s.optDouble("distance", 0);
                     st.seconds = s.optDouble("duration", 0);
                     JSONObject m = s.optJSONObject("maneuver");
@@ -200,79 +201,76 @@ final class Routing {
         }
     }
 
-    /** Mensaje en español para los códigos de error del servicio. */
-    static String messageFor(String code) {
+    /** Mensaje (en el idioma de la app) para los códigos de error del servicio. */
+    static String messageFor(Context ctx, String code) {
         switch (code) {
             case "NoRoute":
-                return "No hay una ruta posible entre estos dos puntos con este vehículo.";
+                return ctx.getString(R.string.msg_no_route);
             case "NoSegment":
-                return "El origen o el destino está demasiado lejos de una vía para este vehículo.";
+                return ctx.getString(R.string.msg_no_segment);
             case "TooBig":
-                return "La ruta es demasiado larga para el servicio.";
+                return ctx.getString(R.string.msg_too_big);
             default:
-                return "El servicio de rutas respondió con un error (" + code + ").";
+                return ctx.getString(R.string.msg_service_error, code);
         }
     }
 
-    private static String direction(String mod) {
+    private static String direction(Context ctx, String mod) {
         switch (mod) {
-            case "left": return "a la izquierda";
-            case "right": return "a la derecha";
-            case "slight left": return "ligeramente a la izquierda";
-            case "slight right": return "ligeramente a la derecha";
-            case "sharp left": return "cerrado a la izquierda";
-            case "sharp right": return "cerrado a la derecha";
-            case "straight": return "recto";
-            case "uturn": return "para dar la vuelta";
+            case "left": return ctx.getString(R.string.dir_left);
+            case "right": return ctx.getString(R.string.dir_right);
+            case "slight left": return ctx.getString(R.string.dir_slight_left);
+            case "slight right": return ctx.getString(R.string.dir_slight_right);
+            case "sharp left": return ctx.getString(R.string.dir_sharp_left);
+            case "sharp right": return ctx.getString(R.string.dir_sharp_right);
+            case "straight": return ctx.getString(R.string.dir_straight);
             default: return "";
         }
     }
 
-    private static String ordinal(int n) {
-        String[] names = {"", "primera", "segunda", "tercera", "cuarta", "quinta",
-                "sexta", "séptima", "octava", "novena", "décima"};
-        return n >= 1 && n < names.length ? names[n] : n + "ª";
-    }
-
-    /** Convierte una maniobra de OSRM en una instrucción en español. */
-    static String instruction(JSONObject step) {
+    /** Convierte una maniobra de OSRM en una instrucción en el idioma de la app. */
+    static String instruction(Context ctx, JSONObject step) {
         JSONObject m = step.optJSONObject("maneuver");
         String type = m != null ? m.optString("type", "") : "";
         String mod = m != null ? m.optString("modifier", "") : "";
         String name = step.optString("name", "");
-        String on = name.isEmpty() ? "" : " por " + name;
-        String dir = direction(mod);
+        String on = name.isEmpty() ? "" : ctx.getString(R.string.step_on, name);
+        String dir = direction(ctx, mod);
         switch (type) {
             case "depart":
-                return "Comienza" + on;
+                return ctx.getString(R.string.step_depart, on);
             case "arrive":
-                if ("left".equals(mod)) return "Llegas a tu destino, a la izquierda";
-                if ("right".equals(mod)) return "Llegas a tu destino, a la derecha";
-                return "Has llegado a tu destino";
+                if ("left".equals(mod)) return ctx.getString(R.string.step_arrive_left);
+                if ("right".equals(mod)) return ctx.getString(R.string.step_arrive_right);
+                return ctx.getString(R.string.step_arrive);
             case "turn":
-                return "Gira " + dir + on;
+                if ("uturn".equals(mod)) return ctx.getString(R.string.step_uturn, on);
+                if ("straight".equals(mod)) return ctx.getString(R.string.step_continue, on);
+                return ctx.getString(R.string.step_turn, dir, on);
             case "end of road":
-                return "Al final de la vía, gira " + dir + on;
+                return ctx.getString(R.string.step_end_of_road, dir, on);
             case "fork":
-                return "En la bifurcación, mantente " + dir + on;
+                return ctx.getString(R.string.step_fork, dir, on);
             case "merge":
-                return "Incorpórate " + dir + on;
+                return ctx.getString(R.string.step_merge, dir, on);
             case "on ramp":
-                return "Toma la incorporación " + dir + on;
+                return ctx.getString(R.string.step_on_ramp, dir, on);
             case "off ramp":
-                return "Toma la salida " + dir + on;
+                return ctx.getString(R.string.step_off_ramp, dir, on);
             case "roundabout":
             case "rotary": {
                 int exit = m != null ? m.optInt("exit", 0) : 0;
-                return "En la rotonda toma la " + (exit > 0 ? ordinal(exit) + " " : "") + "salida" + on;
+                return exit > 0
+                        ? ctx.getString(R.string.step_roundabout_exit, exit, on)
+                        : ctx.getString(R.string.step_roundabout, on);
             }
             case "roundabout turn":
-                return "En la rotonda, gira " + dir + on;
+                return ctx.getString(R.string.step_roundabout_turn, dir, on);
             case "exit roundabout":
             case "exit rotary":
-                return "Sal de la rotonda" + on;
+                return ctx.getString(R.string.step_exit_roundabout, on);
             default:
-                return "Continúa" + on;
+                return ctx.getString(R.string.step_continue, on);
         }
     }
 }

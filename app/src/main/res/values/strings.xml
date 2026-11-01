@@ -196,4 +196,46 @@
     <string name="route_error">No se pudo calcular la ruta (%1$s)</string>
     <string name="route_steps_title">Pasos de la ruta</string>
     <string name="route_consent_message">Para calcular la ruta, Jps envía las coordenadas de tu ubicación y del destino al servicio de rutas de OpenStreetMap (routing.openstreetmap.de, de FOSSGIS, en Alemania). Ese servicio guarda las peticiones en sus registros y verá tu dirección IP. ¿Continuar?</string>
+
+    <!-- Idioma -->
+    <string name="language_dialog_title">Idioma / Language / 语言 / Langue</string>
+    <string name="setting_language">Idioma</string>
+
+    <!-- Duraciones -->
+    <string name="dur_less">&lt; 1 min</string>
+    <string name="dur_days">%1$d d %2$d h</string>
+    <string name="dur_hours">%1$d h %2$02d min</string>
+    <string name="dur_minutes">%1$d min</string>
+
+    <!-- Errores del servicio de rutas -->
+    <string name="msg_no_route">No hay una ruta posible entre estos dos puntos con este vehículo.</string>
+    <string name="msg_no_segment">El origen o el destino está demasiado lejos de una vía para este vehículo.</string>
+    <string name="msg_too_big">La ruta es demasiado larga para el servicio.</string>
+    <string name="msg_service_error">El servicio de rutas respondió con un error (%1$s).</string>
+
+    <!-- Instrucciones de la ruta -->
+    <string name="dir_left">a la izquierda</string>
+    <string name="dir_right">a la derecha</string>
+    <string name="dir_slight_left">ligeramente a la izquierda</string>
+    <string name="dir_slight_right">ligeramente a la derecha</string>
+    <string name="dir_sharp_left">cerrado a la izquierda</string>
+    <string name="dir_sharp_right">cerrado a la derecha</string>
+    <string name="dir_straight">recto</string>
+    <string name="step_on"> por %1$s</string>
+    <string name="step_depart">Comienza%1$s</string>
+    <string name="step_arrive">Has llegado a tu destino</string>
+    <string name="step_arrive_left">Llegas a tu destino, a la izquierda</string>
+    <string name="step_arrive_right">Llegas a tu destino, a la derecha</string>
+    <string name="step_turn">Gira %1$s%2$s</string>
+    <string name="step_uturn">Da la vuelta%1$s</string>
+    <string name="step_continue">Continúa%1$s</string>
+    <string name="step_end_of_road">Al final de la vía, gira %1$s%2$s</string>
+    <string name="step_fork">En la bifurcación, mantente %1$s%2$s</string>
+    <string name="step_merge">Incorpórate %1$s%2$s</string>
+    <string name="step_on_ramp">Toma la incorporación %1$s%2$s</string>
+    <string name="step_off_ramp">Toma la salida %1$s%2$s</string>
+    <string name="step_roundabout_exit">En la rotonda toma la salida %1$d%2$s</string>
+    <string name="step_roundabout">En la rotonda toma la salida%1$s</string>
+    <string name="step_roundabout_turn">En la rotonda, gira %1$s%2$s</string>
+    <string name="step_exit_roundabout">Sal de la rotonda%1$s</string>
 </resources>

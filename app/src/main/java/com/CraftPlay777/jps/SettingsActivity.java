@@ -26,6 +26,9 @@ public class SettingsActivity extends BaseActivity {
         refreshThemeRow();
         findViewById(R.id.row_theme).setOnClickListener(v -> chooseTheme());
 
+        refreshLanguageRow();
+        findViewById(R.id.row_language).setOnClickListener(v -> Lang.showChooser(this, true));
+
         refreshMapSourceRow();
         findViewById(R.id.row_map_source).setOnClickListener(
                 v -> MapSources.showChooser(this, this::refreshMapSourceRow));
@@ -171,6 +174,18 @@ public class SettingsActivity extends BaseActivity {
         sb.append("\n");
         int start = sb.length();
         sb.append(getString(names[mode]));
+        sb.setSpan(new RelativeSizeSpan(0.85f), start, sb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sb.setSpan(new ForegroundColorSpan(getColor(R.color.text_secondary)), start, sb.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        row.setText(sb);
+    }
+
+    private void refreshLanguageRow() {
+        TextView row = findViewById(R.id.row_language);
+        SpannableStringBuilder sb = new SpannableStringBuilder(getString(R.string.setting_language));
+        sb.append("\n");
+        int start = sb.length();
+        sb.append(Lang.currentName(this));
         sb.setSpan(new RelativeSizeSpan(0.85f), start, sb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         sb.setSpan(new ForegroundColorSpan(getColor(R.color.text_secondary)), start, sb.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

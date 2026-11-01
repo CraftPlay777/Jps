@@ -1,6 +1,7 @@
 package com.CraftPlay777.jps;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.text.Html;
 import android.widget.TextView;
@@ -26,22 +27,22 @@ final class Ui {
         return Html.fromHtml(source);
     }
 
-    /** 4500 s -> "1 h 15 min"; 90000 s -> "1 d 1 h". */
-    static String formatDuration(double seconds) {
+    /** 4500 s -> "1 h 15 min"; 90000 s -> "1 d 1 h" (las unidades dependen del idioma). */
+    static String formatDuration(Context c, double seconds) {
         long total = Math.round(seconds / 60.0); // minutos
         if (total < 1) {
-            return "< 1 min";
+            return c.getString(R.string.dur_less);
         }
         long days = total / (60 * 24);
         long hours = (total / 60) % 24;
         long minutes = total % 60;
         if (days > 0) {
-            return days + " d " + hours + " h";
+            return c.getString(R.string.dur_days, days, hours);
         }
         if (hours > 0) {
-            return hours + " h " + (minutes < 10 ? "0" : "") + minutes + " min";
+            return c.getString(R.string.dur_hours, hours, minutes);
         }
-        return minutes + " min";
+        return c.getString(R.string.dur_minutes, minutes);
     }
 
     static String formatDistance(double meters, boolean imperial) {

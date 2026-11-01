@@ -96,7 +96,8 @@ public class GlobeActivity extends BaseActivity {
         double lat = getIntent().getDoubleExtra(EXTRA_LAT, 15.0);
         double lon = getIntent().getDoubleExtra(EXTRA_LON, -30.0);
         boolean ok = Store.isRegionsConsent(this);
-        String options = String.format(Locale.US, "?b=%d&s=%d&c=%d&f=%d",
+        String options = String.format(Locale.US, "?l=%s&b=%d&s=%d&c=%d&f=%d",
+                Lang.current(this),
                 ok && Store.isBorders(this) ? 1 : 0,
                 ok && Store.isStatesOn(this) ? 1 : 0,
                 ok && Store.isColors(this) ? 1 : 0,

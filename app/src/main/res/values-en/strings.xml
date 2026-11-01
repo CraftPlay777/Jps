@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jps</string>
+    <string name="search_hint">Search places</string>
+    <string name="search">Search</string>
+    <string name="clear">Clear</string>
+    <string name="menu">Menu</string>
+    <string name="back">Back</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+    <string name="zoom_max">Maximum zoom</string>
+    <string name="zoom_min">Minimum zoom</string>
+    <string name="compass">Point north</string>
+    <string name="layers">Map service</string>
+    <string name="my_location">My location</string>
+    <string name="finding_location">Finding your location…</string>
+    <string name="searching_address">Looking up address…</string>
+    <string name="pin_dropped">Dropped pin</string>
+    <string name="no_results">No results</string>
+    <string name="error_network">Couldn’t connect. Check your internet.</string>
+    <string name="location_denied">Location permission denied</string>
+    <string name="no_app">There is no app to open this</string>
+    <string name="menu_globe">3D globe</string>
+    <string name="globe_title">3D globe</string>
+    <string name="globe_consent_title">3D globe</string>
+    <string name="globe_consent_message">The 3D globe downloads map images from OpenStreetMap and elevation data from Terrain Tiles, hosted on Amazon Web Services. Both services will see your IP address. Continue?</string>
+    <string name="share">Share</string>
+    <string name="close">Close</string>
+    <string name="share_place">Share place</string>
+    <string name="directions">Directions</string>
+    <string name="copy_coords">Copy</string>
+    <string name="coords_copied">Coordinates copied</string>
+    <string name="distance_from_you">%1$s from you</string>
+    <string name="favorite_toggle">Favorite</string>
+    <string name="favorite_added">Added to favorites</string>
+    <string name="favorite_removed">Removed from favorites</string>
+    <string name="info_ask">See photos and info from Wikipedia</string>
+    <string name="info_loading">Looking for photos and info…</string>
+    <string name="info_source">Wikipedia and Wikimedia Commons · tap the text to read more</string>
+    <string name="info_license">Text from Wikipedia (CC BY-SA). Photos are from Wikimedia Commons, each with its own license.</string>
+    <string name="info_open_wikipedia">Open in Wikipedia</string>
+    <string name="info_consent_title">Photos and info</string>
+    <string name="info_consent_message">To show photos and info about a place, Jps queries Wikipedia and Wikimedia Commons (Wikimedia Foundation). Those services will see your IP address and the name of the place you search for. Continue?</string>
+    <string name="settings_place_info">Photos and info</string>
+    <string name="sw_place_info">Show photos and info from Wikipedia</string>
+    <string name="place_info_hint">When you search for a country, state or city, the place card shows photos and info from Wikipedia. Permission is asked only once. Pins dropped with a long press and favorites don’t show it.</string>
+    <string name="favorites">Favorites</string>
+    <string name="no_favorites">You don’t have any favorite places yet.\nTap the star on a place card to save it.</string>
+    <string name="delete">Delete</string>
+    <string name="settings">Settings</string>
+    <string name="settings_map">Map</string>
+    <string name="settings_data">Data</string>
+    <string name="settings_info">Information</string>
+    <string name="setting_map_source">Map service</string>
+    <string name="source_osm">OpenStreetMap standard</string>
+    <string name="source_osmfr">OpenStreetMap France (local labels)</string>
+    <string name="source_hot">Humanitarian (HOT)</string>
+    <string name="source_cyclosm">CyclOSM (cycling)</string>
+    <string name="source_topo">OpenTopoMap (terrain)</string>
+    <string name="regions_section">Borders and colors</string>
+    <string name="sw_borders">Country borders (red)</string>
+    <string name="sw_states">States and provinces (red)</string>
+    <string name="sw_colors">Color each country</string>
+    <string name="sw_flags">Use the flag as color</string>
+    <string name="regions_hint">States and provinces need country borders; the flag needs country coloring. General borders and colors are visible up to zoom 9 and states from zoom 4. When you search for a country, state or city all lines stay and only that area is painted: with its flag if it’s a country, or with a color if it’s a state or city. It also works on the 3D globe.</string>
+    <string name="regions_consent_title">Download data</string>
+    <string name="regions_consent_message">These options download data from GitHub (Natural Earth borders and geoBoundaries state and province limits) and flags from flagcdn.com. Those services will see your IP address. The data is saved on your device. Continue?</string>
+    <string name="regions_error">Couldn’t load the borders (%1$s)</string>
+    <string name="setting_dark">Dark map</string>
+    <string name="setting_imperial">Use miles and feet</string>
+    <string name="setting_keep_on">Keep the screen on</string>
+    <string name="clear_history">Clear search history</string>
+    <string name="history_cleared">History cleared</string>
+    <string name="clear_favorites">Delete all favorites</string>
+    <string name="clear_favorites_confirm">Delete all your favorites? This can’t be undone.</string>
+    <string name="favorites_cleared">Favorites deleted</string>
+    <string name="delete_action">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="report_problem">Report a problem</string>
+    <string name="privacy_title">Privacy policy</string>
+    <string name="about_title">About Jps</string>
+    <string name="consent_title">Before you start</string>
+    <string name="consent_message">Jps has no accounts or ads. To work it downloads maps from OpenStreetMap and sends the text you search for to Nominatim, so those services will see your IP address. Location is optional and is used only on your device (unless you ask for directions). Read the privacy policy for more details.</string>
+    <string name="consent_accept">Accept and continue</string>
+    <string name="consent_read">Read policy</string>
+    <string name="consent_exit">Exit</string>
+    <string name="privacy_html"><![CDATA[
+<h2>Jps privacy policy</h2>
+<p><i>Last updated: November 1, 2026</i></p>
+<p>Jps is an open-source map app created by CraftPlay777. This policy explains what data the app uses and why.</p>
+
+<h3>Summary</h3>
+<p>Jps has no accounts, shows no ads, uses no analytics or trackers, and sends none of your data to any server of the developer (there isn’t one).</p>
+
+<h3>Location</h3>
+<p>The location permission is optional. It is used only on your device to show your position on the map and calculate the distance to a place. Jps only sends it to a server when you ask for a route with Directions (see Third-party services). You can remove the permission in Android settings at any time.</p>
+
+<h3>Third-party services</h3>
+<p>To work, the app connects to these services, which receive your IP address and the data indicated:</p>
+<ul>
+<li><b>OpenStreetMap</b> (tile.openstreetmap.org): the default map service; it downloads the map images, so it knows the area you are viewing.</li>
+<li><b>Other map services</b>, only if you choose them in Settings: OpenStreetMap France, Humanitarian and CyclOSM (tile.openstreetmap.fr and tile-cyclosm.openstreetmap.fr, run by OpenStreetMap France) or OpenTopoMap (opentopomap.org). The service you choose receives the area you are viewing.</li>
+<li><b>3D globe</b> (only if you open that screen and accept): downloads map images from tile.openstreetmap.org and elevation data from Terrain Tiles, hosted on Amazon Web Services (s3.amazonaws.com). Both receive your IP address. The app adds its name and version to the user agent of the built-in browser that draws the globe, as OpenStreetMap’s rules require.</li>
+<li><b>Borders, states and flags</b> (only if you turn those options on and accept): downloads country borders from raw.githubusercontent.com (Natural Earth), state and province limits from github.com (geoBoundaries) and flags from flagcdn.com. These services receive your IP address and the code of the country whose data is requested. The files are saved on your device.</li>
+<li><b>Photos and info</b> (only if you leave that option on in Settings and accept): queries Wikipedia (es.wikipedia.org and other Wikipedia languages) for the text and Wikimedia Commons (upload.wikimedia.org) for the photos. Both are run by the Wikimedia Foundation, see your IP address and receive the name or article of the place you search for. Photos are kept only in the phone’s memory while the app is open.</li>
+<li><b>Directions</b> (only when you ask for a route and accept): sends the coordinates of your location and the destination to routing.openstreetmap.de (FOSSGIS OSRM service, in Germany), which keeps requests in its logs and sees your IP address. It is the only time Jps sends your location to a server.</li>
+<li><b>Nominatim</b> (nominatim.openstreetmap.org): receives the text you search for, the coordinates of a point you mark with a long press or the identifier of the place you choose, to return results, addresses or the outline of an area.</li>
+</ul>
+<p>Each service has its own privacy policy and Jps does not control how they apply it. The OpenStreetMap Foundation’s is at <a href="https://osmfoundation.org/wiki/Privacy_Policy">osmfoundation.org/wiki/Privacy_Policy</a>.</p>
+<p>Jps makes no connection until you accept this policy the first time you open the app.</p>
+
+<h3>Data stored on your device</h3>
+<p>Stored only on your device: your favorites, your last 8 searches, your settings (including language), the last map position you viewed, the cache of map and 3D globe images, and the downloaded border, state and flag files. You can delete the history and favorites in Settings, or delete everything by uninstalling the app or clearing its data from Android.</p>
+
+<h3>Sharing</h3>
+<p>Jps only shares a place when you ask, through Android’s share menu. What is shared is the place name and a link to OpenStreetMap.</p>
+
+<h3>Children</h3>
+<p>Jps does not collect personal data from anyone, including children.</p>
+
+<h3>Changes to this policy</h3>
+<p>If this policy changes, it will be published at <a href="https://github.com/CraftPlay777/Jps/blob/main/PRIVACY.md">github.com/CraftPlay777/Jps</a> and the date above will be updated.</p>
+
+<h3>Contact</h3>
+<p>For questions or problems, open an issue at <a href="https://github.com/CraftPlay777/Jps/issues">github.com/CraftPlay777/Jps/issues</a>.</p>
+]]></string>
+    <string name="about_html"><![CDATA[
+<h2>Jps</h2>
+<p>Version %1$s</p>
+<p>A simple, ad-free map app made by CraftPlay777.</p>
+
+<h3>Open source</h3>
+<p>The code and license (MIT) are at <a href="https://github.com/CraftPlay777/Jps">github.com/CraftPlay777/Jps</a>.</p>
+
+<h3>Data and credits</h3>
+<ul>
+<li>Map data: © OpenStreetMap contributors, ODbL license. <a href="https://www.openstreetmap.org/copyright">openstreetmap.org/copyright</a></li>
+<li>Optional map styles: © OpenTopoMap (CC-BY-SA, with SRTM data), CyclOSM, Humanitarian OpenStreetMap Team and OpenStreetMap France.</li>
+<li>Place search: Nominatim.</li>
+<li>3D globe: relief from Terrain Tiles (Tilezen/Mapzen), hosted on AWS, with data from SRTM, ETOPO1 and other public sources. More information at <a href="https://aws.amazon.com/public-datasets/terrain/">aws.amazon.com/public-datasets/terrain</a>.</li>
+<li>Country borders: Natural Earth (public domain).</li>
+<li>State and province limits: geoBoundaries (William &amp; Mary geoLab), CC BY 4.0 license.</li>
+<li>Flags: Flagpedia (flagcdn.com).</li>
+<li>Place photos and info: text from Wikipedia (CC BY-SA) and photos from Wikimedia Commons, each with its own license. <a href="https://commons.wikimedia.org">commons.wikimedia.org</a></li>
+<li>Routes: OSRM with OpenStreetMap data, served by FOSSGIS (routing.openstreetmap.de).</li>
+<li>Map library: osmdroid (Apache License 2.0).</li>
+<li>Icons: Google Material Icons (Apache License 2.0).</li>
+</ul>
+
+<h3>Notice</h3>
+<p>Maps may contain errors or be out of date. Do not use Jps as your only guide in critical situations. The app is provided as is, without warranties.</p>
+]]></string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="setting_theme">App theme</string>
+    <string name="theme_device">Device (automatic)</string>
+    <string name="theme_light">Light (white)</string>
+    <string name="theme_dark">Dark (black)</string>
+    <string name="vehicle_car">Car</string>
+    <string name="vehicle_moto">Motorcycle</string>
+    <string name="vehicle_truck">Truck</string>
+    <string name="vehicle_bike">Bicycle</string>
+    <string name="vehicle_foot">On foot</string>
+    <string name="kmh">km/h</string>
+    <string name="route_speed_hint">Speed</string>
+    <string name="route_stay">Don’t leave the country</string>
+    <string name="route_calculate">Get route</string>
+    <string name="route_steps">Steps</string>
+    <string name="route_other_app">Other app</string>
+    <string name="route_calculating">Calculating the route…</string>
+    <string name="route_loading_borders">Loading borders…</string>
+    <string name="route_no_location">I don’t have your location yet. Turn on GPS and wait a few seconds.</string>
+    <string name="route_bad_speed">Enter a speed greater than 0.</string>
+    <string name="route_unverified">I couldn’t verify the country of the origin or destination, so the restriction wasn’t applied.</string>
+    <string name="route_different_countries">The origin is in %1$s and the destination in %2$s. With “Don’t leave the country” on, this route isn’t calculated.</string>
+    <string name="route_leaves_country">All possible routes from %1$s go through %2$s. Turn off “Don’t leave the country” to see them.</string>
+    <string name="route_summary">Distance: %1$s\nTime at %2$s km/h: %3$s\nTime estimated by the routing service: %4$s</string>
+    <string name="route_error">Couldn’t calculate the route (%1$s)</string>
+    <string name="route_steps_title">Route steps</string>
+    <string name="route_consent_message">To calculate the route, Jps sends the coordinates of your location and the destination to the OpenStreetMap routing service (routing.openstreetmap.de, by FOSSGIS, in Germany). That service keeps requests in its logs and will see your IP address. Continue?</string>
+    <string name="language_dialog_title">Idioma / Language / 语言 / Langue</string>
+    <string name="setting_language">Language</string>
+    <string name="dur_less">&lt; 1 min</string>
+    <string name="dur_days">%1$d d %2$d h</string>
+    <string name="dur_hours">%1$d h %2$02d min</string>
+    <string name="dur_minutes">%1$d min</string>
+    <string name="msg_no_route">There is no possible route between these two points for this vehicle.</string>
+    <string name="msg_no_segment">The origin or destination is too far from a road for this vehicle.</string>
+    <string name="msg_too_big">The route is too long for the service.</string>
+    <string name="msg_service_error">The routing service returned an error (%1$s).</string>
+    <string name="dir_left">left</string>
+    <string name="dir_right">right</string>
+    <string name="dir_slight_left">slightly left</string>
+    <string name="dir_slight_right">slightly right</string>
+    <string name="dir_sharp_left">sharp left</string>
+    <string name="dir_sharp_right">sharp right</string>
+    <string name="dir_straight">straight</string>
+    <string name="step_on"> on %1$s</string>
+    <string name="step_depart">Start%1$s</string>
+    <string name="step_arrive">You have arrived at your destination</string>
+    <string name="step_arrive_left">Your destination is on the left</string>
+    <string name="step_arrive_right">Your destination is on the right</string>
+    <string name="step_turn">Turn %1$s%2$s</string>
+    <string name="step_uturn">Make a U-turn%1$s</string>
+    <string name="step_continue">Continue%1$s</string>
+    <string name="step_end_of_road">At the end of the road, turn %1$s%2$s</string>
+    <string name="step_fork">At the fork, keep %1$s%2$s</string>
+    <string name="step_merge">Merge %1$s%2$s</string>
+    <string name="step_on_ramp">Take the on-ramp %1$s%2$s</string>
+    <string name="step_off_ramp">Take the exit %1$s%2$s</string>
+    <string name="step_roundabout_exit">At the roundabout, take exit %1$d%2$s</string>
+    <string name="step_roundabout">At the roundabout, take the exit%1$s</string>
+    <string name="step_roundabout_turn">At the roundabout, turn %1$s%2$s</string>
+    <string name="step_exit_roundabout">Exit the roundabout%1$s</string>
+</resources>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jps</string>
+    <string name="search_hint">搜索地点</string>
+    <string name="search">搜索</string>
+    <string name="clear">清除</string>
+    <string name="menu">菜单</string>
+    <string name="back">返回</string>
+    <string name="zoom_in">放大</string>
+    <string name="zoom_out">缩小</string>
+    <string name="zoom_max">最大缩放</string>
+    <string name="zoom_min">最小缩放</string>
+    <string name="compass">指向北方</string>
+    <string name="layers">地图服务</string>
+    <string name="my_location">我的位置</string>
+    <string name="finding_location">正在查找你的位置…</string>
+    <string name="searching_address">正在查找地址…</string>
+    <string name="pin_dropped">已标记的点</string>
+    <string name="no_results">没有结果</string>
+    <string name="error_network">无法连接，请检查网络。</string>
+    <string name="location_denied">定位权限被拒绝</string>
+    <string name="no_app">没有可以打开此内容的应用</string>
+    <string name="menu_globe">3D 地球</string>
+    <string name="globe_title">3D 地球</string>
+    <string name="globe_consent_title">3D 地球</string>
+    <string name="globe_consent_message">3D 地球会从 OpenStreetMap 下载地图图像，并从托管在亚马逊云服务（AWS）上的 Terrain Tiles 下载海拔数据。这两个服务都会看到你的 IP 地址。是否继续？</string>
+    <string name="share">分享</string>
+    <string name="close">关闭</string>
+    <string name="share_place">分享地点</string>
+    <string name="directions">路线</string>
+    <string name="copy_coords">复制</string>
+    <string name="coords_copied">坐标已复制</string>
+    <string name="distance_from_you">距你 %1$s</string>
+    <string name="favorite_toggle">收藏</string>
+    <string name="favorite_added">已添加到收藏</string>
+    <string name="favorite_removed">已从收藏中移除</string>
+    <string name="info_ask">查看维基百科的照片和简介</string>
+    <string name="info_loading">正在查找照片和简介…</string>
+    <string name="info_source">维基百科和维基共享资源 · 点按文字阅读更多</string>
+    <string name="info_license">文字来自维基百科（CC BY-SA）。照片来自维基共享资源，各有其自己的许可协议。</string>
+    <string name="info_open_wikipedia">在维基百科中打开</string>
+    <string name="info_consent_title">照片和简介</string>
+    <string name="info_consent_message">为了显示地点的照片和简介，Jps 会访问维基百科和维基共享资源（维基媒体基金会）。这些服务会看到你的 IP 地址和你搜索的地点名称。是否继续？</string>
+    <string name="settings_place_info">照片和简介</string>
+    <string name="sw_place_info">显示维基百科的照片和简介</string>
+    <string name="place_info_hint">搜索国家、州/省或城市时，地点卡片会显示来自维基百科的照片和简介。只会询问一次权限。长按标记的点和收藏的地点不显示这些内容。</string>
+    <string name="favorites">收藏</string>
+    <string name="no_favorites">你还没有收藏的地点。\n点按地点卡片上的星标即可保存。</string>
+    <string name="delete">删除</string>
+    <string name="settings">设置</string>
+    <string name="settings_map">地图</string>
+    <string name="settings_data">数据</string>
+    <string name="settings_info">信息</string>
+    <string name="setting_map_source">地图服务</string>
+    <string name="source_osm">OpenStreetMap 标准</string>
+    <string name="source_osmfr">OpenStreetMap 法国（本地标注）</string>
+    <string name="source_hot">人道主义（HOT）</string>
+    <string name="source_cyclosm">CyclOSM（骑行）</string>
+    <string name="source_topo">OpenTopoMap（地形）</string>
+    <string name="regions_section">边界和颜色</string>
+    <string name="sw_borders">国家边界（红色）</string>
+    <string name="sw_states">州和省（红色）</string>
+    <string name="sw_colors">给每个国家着色</string>
+    <string name="sw_flags">用国旗作为颜色</string>
+    <string name="regions_hint">州和省需要开启国家边界；国旗需要开启国家着色。常规边界和颜色在缩放级别 9 以内可见，州和省从缩放级别 4 起可见。搜索国家、州/省或城市时，所有线条都会保留，只为该区域上色：国家使用其国旗，州/省或城市使用一种颜色。3D 地球上同样适用。</string>
+    <string name="regions_consent_title">下载数据</string>
+    <string name="regions_consent_message">这些选项会从 GitHub 下载数据（Natural Earth 国家边界和 geoBoundaries 州/省界线），并从 flagcdn.com 下载国旗。这些服务会看到你的 IP 地址。数据保存在你的设备上。是否继续？</string>
+    <string name="regions_error">无法加载边界（%1$s）</string>
+    <string name="setting_dark">深色地图</string>
+    <string name="setting_imperial">使用英里和英尺</string>
+    <string name="setting_keep_on">保持屏幕常亮</string>
+    <string name="clear_history">清除搜索历史</string>
+    <string name="history_cleared">历史已清除</string>
+    <string name="clear_favorites">删除所有收藏</string>
+    <string name="clear_favorites_confirm">要删除所有收藏吗？此操作无法撤销。</string>
+    <string name="favorites_cleared">收藏已删除</string>
+    <string name="delete_action">删除</string>
+    <string name="cancel">取消</string>
+    <string name="report_problem">报告问题</string>
+    <string name="privacy_title">隐私政策</string>
+    <string name="about_title">关于 Jps</string>
+    <string name="consent_title">开始之前</string>
+    <string name="consent_message">Jps 没有账号，也没有广告。为了正常运行，它会从 OpenStreetMap 下载地图，并把你搜索的文字发送给 Nominatim，因此这些服务会看到你的 IP 地址。定位是可选的，仅在你的设备上使用（请求路线时除外）。更多详情请阅读隐私政策。</string>
+    <string name="consent_accept">接受并继续</string>
+    <string name="consent_read">阅读政策</string>
+    <string name="consent_exit">退出</string>
+    <string name="privacy_html"><![CDATA[
+<h2>Jps 隐私政策</h2>
+<p><i>最后更新：2026 年 11 月 1 日</i></p>
+<p>Jps 是由 CraftPlay777 创建的开源地图应用。本政策说明应用使用哪些数据以及用途。</p>
+
+<h3>概述</h3>
+<p>Jps 没有账号，不显示广告，不使用统计分析或跟踪器，也不会把你的数据发送到开发者的任何服务器（根本不存在这样的服务器）。</p>
+
+<h3>位置</h3>
+<p>定位权限是可选的。它仅在你的设备上用于在地图上显示你的位置并计算到某个地点的距离。只有当你使用“路线”请求路线时，Jps 才会把它发送到服务器（见第三方服务）。你可以随时在 Android 设置中撤销该权限。</p>
+
+<h3>第三方服务</h3>
+<p>为了正常运行，应用会连接以下服务，它们会收到你的 IP 地址以及所列数据：</p>
+<ul>
+<li><b>OpenStreetMap</b>（tile.openstreetmap.org）：默认地图服务；它下载地图图像，因此知道你正在查看的区域。</li>
+<li><b>其他地图服务</b>，仅在你于设置中选择时使用：OpenStreetMap 法国、人道主义和 CyclOSM（tile.openstreetmap.fr 和 tile-cyclosm.openstreetmap.fr，由 OpenStreetMap 法国运营）或 OpenTopoMap（opentopomap.org）。你选择的服务会收到你正在查看的区域。</li>
+<li><b>3D 地球</b>（仅在你打开该界面并同意后）：从 tile.openstreetmap.org 下载地图图像，并从托管在亚马逊云服务上的 Terrain Tiles（s3.amazonaws.com）下载海拔数据。二者都会收到你的 IP 地址。按照 OpenStreetMap 的规定，应用会把自己的名称和版本添加到绘制地球的内置浏览器的标识中。</li>
+<li><b>边界、州/省和国旗</b>（仅在你开启这些选项并同意后）：从 raw.githubusercontent.com（Natural Earth）下载国家边界，从 github.com（geoBoundaries）下载州/省界线，从 flagcdn.com 下载国旗。这些服务会收到你的 IP 地址和所请求数据对应的国家代码。文件保存在你的设备上。</li>
+<li><b>照片和简介</b>（仅在你于设置中保持该选项开启并同意后）：向维基百科（es.wikipedia.org 及其他语言版本）获取文字，向维基共享资源（upload.wikimedia.org）获取照片。二者均由维基媒体基金会运营，会看到你的 IP 地址，并收到你搜索的地点名称或条目。照片仅在应用打开期间保存在手机内存中。</li>
+<li><b>路线</b>（仅在你请求路线并同意后）：把你的位置和目的地的坐标发送到 routing.openstreetmap.de（德国 FOSSGIS 的 OSRM 服务），该服务会在日志中保存请求并看到你的 IP 地址。这是 Jps 唯一一次把你的位置发送到服务器。</li>
+<li><b>Nominatim</b>（nominatim.openstreetmap.org）：接收你搜索的文字、你长按标记的点的坐标或你所选地点的标识，用于返回结果、地址或某个区域的轮廓。</li>
+</ul>
+<p>每个服务都有自己的隐私政策，Jps 无法控制它们如何执行。OpenStreetMap 基金会的政策见 <a href="https://osmfoundation.org/wiki/Privacy_Policy">osmfoundation.org/wiki/Privacy_Policy</a>。</p>
+<p>在你第一次打开应用并接受本政策之前，Jps 不会进行任何连接。</p>
+
+<h3>保存在你设备上的数据</h3>
+<p>以下数据仅保存在你的设备上：你的收藏、最近 8 次搜索、你的设置（包括语言）、你上次查看的地图位置、地图和 3D 地球图像的缓存，以及已下载的边界、州/省和国旗文件。你可以在设置中删除历史和收藏，或通过卸载应用或在 Android 中清除其数据来删除全部内容。</p>
+
+<h3>分享</h3>
+<p>只有当你要求时，Jps 才会通过 Android 的分享菜单分享地点。分享的内容是地点名称和指向 OpenStreetMap 的链接。</p>
+
+<h3>未成年人</h3>
+<p>Jps 不收集任何人的个人数据，包括未成年人。</p>
+
+<h3>本政策的变更</h3>
+<p>如果本政策发生变化，将发布在 <a href="https://github.com/CraftPlay777/Jps/blob/main/PRIVACY.md">github.com/CraftPlay777/Jps</a>，并更新上面的日期。</p>
+
+<h3>联系方式</h3>
+<p>如有疑问或问题，请在 <a href="https://github.com/CraftPlay777/Jps/issues">github.com/CraftPlay777/Jps/issues</a> 提交问题。</p>
+]]></string>
+    <string name="about_html"><![CDATA[
+<h2>Jps</h2>
+<p>版本 %1$s</p>
+<p>由 CraftPlay777 制作的简洁、无广告的地图应用。</p>
+
+<h3>开源</h3>
+<p>代码和许可协议（MIT）见 <a href="https://github.com/CraftPlay777/Jps">github.com/CraftPlay777/Jps</a>。</p>
+
+<h3>数据和致谢</h3>
+<ul>
+<li>地图数据：© OpenStreetMap 贡献者，ODbL 许可。<a href="https://www.openstreetmap.org/copyright">openstreetmap.org/copyright</a></li>
+<li>可选地图样式：© OpenTopoMap（CC-BY-SA，使用 SRTM 数据）、CyclOSM、Humanitarian OpenStreetMap Team 和 OpenStreetMap 法国。</li>
+<li>地点搜索：Nominatim。</li>
+<li>3D 地球：地形来自 Terrain Tiles（Tilezen/Mapzen），托管于 AWS，数据来自 SRTM、ETOPO1 及其他公开来源。更多信息见 <a href="https://aws.amazon.com/public-datasets/terrain/">aws.amazon.com/public-datasets/terrain</a>。</li>
+<li>国家边界：Natural Earth（公有领域）。</li>
+<li>州/省界线：geoBoundaries（William &amp; Mary geoLab），CC BY 4.0 许可。</li>
+<li>国旗：Flagpedia（flagcdn.com）。</li>
+<li>地点照片和简介：文字来自维基百科（CC BY-SA），照片来自维基共享资源，各有其自己的许可协议。<a href="https://commons.wikimedia.org">commons.wikimedia.org</a></li>
+<li>路线：使用 OpenStreetMap 数据的 OSRM，由 FOSSGIS 提供（routing.openstreetmap.de）。</li>
+<li>地图库：osmdroid（Apache License 2.0）。</li>
+<li>图标：Google Material Icons（Apache License 2.0）。</li>
+</ul>
+
+<h3>声明</h3>
+<p>地图可能存在错误或已过时。请勿在关键情况下把 Jps 作为唯一的指引。本应用按“现状”提供，不作任何保证。</p>
+]]></string>
+    <string name="settings_appearance">外观</string>
+    <string name="setting_theme">应用主题</string>
+    <string name="theme_device">跟随设备（自动）</string>
+    <string name="theme_light">浅色（白色）</string>
+    <string name="theme_dark">深色（黑色）</string>
+    <string name="vehicle_car">汽车</string>
+    <string name="vehicle_moto">摩托车</string>
+    <string name="vehicle_truck">卡车</string>
+    <string name="vehicle_bike">自行车</string>
+    <string name="vehicle_foot">步行</string>
+    <string name="kmh">公里/小时</string>
+    <string name="route_speed_hint">速度</string>
+    <string name="route_stay">不离开本国</string>
+    <string name="route_calculate">计算路线</string>
+    <string name="route_steps">步骤</string>
+    <string name="route_other_app">其他应用</string>
+    <string name="route_calculating">正在计算路线…</string>
+    <string name="route_loading_borders">正在加载边界…</string>
+    <string name="route_no_location">还没有获取到你的位置。请打开 GPS 并等待几秒钟。</string>
+    <string name="route_bad_speed">请输入大于 0 的速度。</string>
+    <string name="route_unverified">无法确认起点或终点所在的国家，因此未应用限制。</string>
+    <string name="route_different_countries">起点在%1$s，终点在%2$s。开启“不离开本国”后，不会计算这条路线。</string>
+    <string name="route_leaves_country">从%1$s出发的所有可行路线都会经过%2$s。关闭“不离开本国”即可查看。</string>
+    <string name="route_summary">距离：%1$s\n以 %2$s 公里/小时行驶的时间：%3$s\n路线服务估算的时间：%4$s</string>
+    <string name="route_error">无法计算路线（%1$s）</string>
+    <string name="route_steps_title">路线步骤</string>
+    <string name="route_consent_message">为了计算路线，Jps 会把你的位置和目的地的坐标发送到 OpenStreetMap 路线服务（routing.openstreetmap.de，由德国的 FOSSGIS 提供）。该服务会在日志中保存请求，并会看到你的 IP 地址。是否继续？</string>
+    <string name="language_dialog_title">Idioma / Language / 语言 / Langue</string>
+    <string name="setting_language">语言</string>
+    <string name="dur_less">不到 1 分钟</string>
+    <string name="dur_days">%1$d 天 %2$d 小时</string>
+    <string name="dur_hours">%1$d 小时 %2$02d 分钟</string>
+    <string name="dur_minutes">%1$d 分钟</string>
+    <string name="msg_no_route">这辆车在这两点之间没有可行的路线。</string>
+    <string name="msg_no_segment">起点或终点离道路太远，这种交通方式无法到达。</string>
+    <string name="msg_too_big">路线太长，服务无法处理。</string>
+    <string name="msg_service_error">路线服务返回了错误（%1$s）。</string>
+    <string name="dir_left">向左</string>
+    <string name="dir_right">向右</string>
+    <string name="dir_slight_left">稍向左</string>
+    <string name="dir_slight_right">稍向右</string>
+    <string name="dir_sharp_left">大幅向左</string>
+    <string name="dir_sharp_right">大幅向右</string>
+    <string name="dir_straight">直行</string>
+    <string name="step_on">，沿%1$s</string>
+    <string name="step_depart">出发%1$s</string>
+    <string name="step_arrive">你已到达目的地</string>
+    <string name="step_arrive_left">目的地在左侧</string>
+    <string name="step_arrive_right">目的地在右侧</string>
+    <string name="step_turn">%1$s转弯%2$s</string>
+    <string name="step_uturn">掉头%1$s</string>
+    <string name="step_continue">继续前行%1$s</string>
+    <string name="step_end_of_road">到道路尽头，%1$s转弯%2$s</string>
+    <string name="step_fork">在岔路口，保持%1$s%2$s</string>
+    <string name="step_merge">%1$s汇入车道%2$s</string>
+    <string name="step_on_ramp">%1$s驶入匝道%2$s</string>
+    <string name="step_off_ramp">%1$s驶出匝道%2$s</string>
+    <string name="step_roundabout_exit">在环岛，从第 %1$d 个出口驶出%2$s</string>
+    <string name="step_roundabout">在环岛驶出%1$s</string>
+    <string name="step_roundabout_turn">在环岛，%1$s转弯%2$s</string>
+    <string name="step_exit_roundabout">驶出环岛%1$s</string>
+</resources>

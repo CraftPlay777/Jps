@@ -266,7 +266,7 @@ final class RouteController {
             String message = null;
             String note = null;
             try {
-                List<Routing.Route> routes = Routing.fetch(vehicle.profile, from, to);
+                List<Routing.Route> routes = Routing.fetch(activity, vehicle.profile, from, to);
                 chosen = routes.get(0);
                 if (stay) {
                     Regions regions = Regions.get(activity);
@@ -301,7 +301,7 @@ final class RouteController {
                 }
             } catch (Routing.RouteException e) {
                 chosen = null;
-                message = Routing.messageFor(e.code);
+                message = Routing.messageFor(activity, e.code);
             } catch (IOException | JSONException | RuntimeException | OutOfMemoryError e) {
                 chosen = null;
                 message = activity.getString(R.string.route_error, Regions.describe(e));
@@ -329,7 +329,7 @@ final class RouteController {
         double secondsAtSpeed = r.meters / (kmh / 3.6);
         String text = activity.getString(R.string.route_summary,
                 Ui.formatDistance(r.meters, imperial), speedText(kmh),
-                Ui.formatDuration(secondsAtSpeed), Ui.formatDuration(r.seconds));
+                Ui.formatDuration(activity, secondsAtSpeed), Ui.formatDuration(activity, r.seconds));
         if (note != null) {
             text += "\n" + note;
         }

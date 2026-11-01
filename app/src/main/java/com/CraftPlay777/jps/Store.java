@@ -131,6 +131,21 @@ final class Store {
         sp(c).edit().putBoolean("info_consent", value).apply();
     }
 
+    // ---------------------------------------------------------------- idioma
+
+    /** Código del idioma elegido ("es", "en", "zh", "fr") o null si todavía no eligió. */
+    static String getLang(Context c) {
+        return sp(c).getString("lang", null);
+    }
+
+    static boolean isLangChosen(Context c) {
+        return getLang(c) != null;
+    }
+
+    static void setLang(Context c, String code) {
+        sp(c).edit().putString("lang", code).apply();
+    }
+
     // ------------------------------------------------------------------ tema
 
     /** 0 = según el dispositivo, 1 = claro, 2 = oscuro. Por defecto, claro. */
