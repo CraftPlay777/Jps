@@ -114,6 +114,58 @@ final class Store {
         sp(c).edit().putBoolean("flags", value).apply();
     }
 
+    // ------------------------------------------------------------------ tema
+
+    /** 0 = según el dispositivo, 1 = claro, 2 = oscuro. Por defecto, claro. */
+    static int getThemeMode(Context c) {
+        return sp(c).getInt("theme_mode", 1);
+    }
+
+    static void setThemeMode(Context c, int mode) {
+        sp(c).edit().putInt("theme_mode", mode).apply();
+    }
+
+    // ------------------------------------------------------------ cómo llegar
+
+    static boolean isRouteConsent(Context c) {
+        return sp(c).getBoolean("route_consent", false);
+    }
+
+    static void setRouteConsent(Context c, boolean value) {
+        sp(c).edit().putBoolean("route_consent", value).apply();
+    }
+
+    static String getVehicle(Context c) {
+        return sp(c).getString("vehicle", "car");
+    }
+
+    static void setVehicle(Context c, String id) {
+        sp(c).edit().putString("vehicle", id).apply();
+    }
+
+    /** Velocidad personalizada (km/h) de un vehículo; 0 si no hay. */
+    static float getSpeed(Context c, String vehicleId) {
+        return sp(c).getFloat("speed_" + vehicleId, 0f);
+    }
+
+    static void setSpeed(Context c, String vehicleId, float kmh) {
+        SharedPreferences.Editor e = sp(c).edit();
+        if (kmh > 0f) {
+            e.putFloat("speed_" + vehicleId, kmh);
+        } else {
+            e.remove("speed_" + vehicleId);
+        }
+        e.apply();
+    }
+
+    static boolean isRouteStay(Context c) {
+        return sp(c).getBoolean("route_stay", true);
+    }
+
+    static void setRouteStay(Context c, boolean value) {
+        sp(c).edit().putBoolean("route_stay", value).apply();
+    }
+
     static boolean isGlobeConsentGiven(Context c) {
         return sp(c).getBoolean("globe_consent", false);
     }

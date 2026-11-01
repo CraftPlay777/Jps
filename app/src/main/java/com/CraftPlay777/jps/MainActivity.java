@@ -1,7 +1,6 @@
 package com.CraftPlay777.jps;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -62,7 +61,7 @@ import java.util.concurrent.Executors;
  * Jps: mapa con búsqueda, mi ubicación, favoritos, historial, capas y ajustes.
  * Usa OpenStreetMap (osmdroid), así que no necesita API key.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     private static final int REQ_LOCATION = 1;
     private static final int REQ_FAVORITE = 2;
@@ -88,6 +87,7 @@ public class MainActivity extends Activity {
     private FolderOverlay boundary;
     private ZoneOverlay zoneOverlay;
     private RegionsOverlay regionsOverlay;
+    private RouteController routeController;
     private final Handler idleHandler = new Handler(Looper.getMainLooper());
     private final Runnable requestStatesTask = () -> {
         if (regionsOverlay != null) {
@@ -250,6 +250,37 @@ public class MainActivity extends Activity {
 
         myLocation = new MyLocationNewOverlay(new GpsMyLocationProvider(this), map);
         map.getOverlays().add(myLocation);
+
+        routeController = new RouteController(this, map, myLocation, new RouteController.Host() {
+            @Override
+            public GeoPoint here() {
+                return myLocation.getMyLocation();
+            }
+
+            @Override
+            public void askLocation() {
+                if (hasLocationPermission()) {
+                    startLocation();
+                } else {
+                    requestLocationPermission();
+                }
+            }
+
+            @Override
+            public void setPlaceCardVisible(boolean visible) {
+                card.setVisibility(visible && selected != null ? View.VISIBLE : View.GONE);
+            }
+
+            @Override
+            public void openInOtherApp() {
+                MainActivity.this.openInOtherApp();
+            }
+
+            @Override
+            public int dp(int value) {
+                return MainActivity.this.dp(value);
+            }
+        });
     }
 
     /** Pone en el mapa el servicio elegido en Ajustes (solo si ha cambiado). */
@@ -434,6 +465,9 @@ public class MainActivity extends Activity {
     // ------------------------------------------------------ marcador y ficha
 
     private void showPlace(Place p, boolean zoomTo) {
+        if (routeController != null && routeController.isOpen()) {
+            routeController.close();
+        }
         selected = p;
         if (p.osmType != null) {
             loadBoundary(p);
@@ -601,6 +635,9 @@ public class MainActivity extends Activity {
     }
 
     private void clearSelection() {
+        if (routeController != null) {
+            routeController.close();
+        }
         selected = null;
         card.setVisibility(View.GONE);
         if (marker != null) {
@@ -650,8 +687,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    /** Abre el lugar en otra app de mapas o navegación instalada en el móvil. */
+    /** Abre el panel de ruta dentro de la app (vehículo, velocidad y recorrido). */
     private void openDirections() {
+        if (selected == null) {
+            return;
+        }
+        routeController.open(selected);
+    }
+
+    /** Abre el lugar en otra app de mapas o navegación instalada en el móvil. */
+    private void openInOtherApp() {
         if (selected == null) {
             return;
         }
@@ -857,12 +902,15 @@ public class MainActivity extends Activity {
         idleHandler.removeCallbacks(requestStatesTask);
         io.shutdown();
         boundaryIo.shutdown();
+        routeController.shutdown();
         map.onDetach();
     }
 
     @Override
     public void onBackPressed() {
-        if (resultsList.getVisibility() == View.VISIBLE) {
+        if (routeController != null && routeController.isOpen()) {
+            routeController.close();
+        } else if (resultsList.getVisibility() == View.VISIBLE) {
             hideResults();
         } else if (card.getVisibility() == View.VISIBLE) {
             clearSelection();

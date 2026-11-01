@@ -4,3 +4,5 @@ local.properties
 .idea/
 *.apk
 *.iml
+tools/globe-tests/globe.js
+__pycache__/

@@ -1,6 +1,5 @@
 package com.CraftPlay777.jps;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 /** Lista de lugares favoritos. Al tocar uno, vuelve al mapa y lo muestra. */
-public class FavoritesActivity extends Activity {
+public class FavoritesActivity extends BaseActivity {
 
     private final List<Place> items = new ArrayList<>();
     private ArrayAdapter<Place> adapter;

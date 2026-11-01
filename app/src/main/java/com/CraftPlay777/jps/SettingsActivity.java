@@ -1,6 +1,5 @@
 package com.CraftPlay777.jps;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /** Ajustes: apariencia del mapa, unidades, borrado de datos y accesos a información legal. */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends BaseActivity {
 
     private Switch swBorders, swStates, swColors, swFlags;
     private boolean binding;
@@ -23,6 +22,9 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Ui.setupHeader(this, R.string.settings);
+
+        refreshThemeRow();
+        findViewById(R.id.row_theme).setOnClickListener(v -> chooseTheme());
 
         refreshMapSourceRow();
         findViewById(R.id.row_map_source).setOnClickListener(
@@ -148,6 +150,39 @@ public class SettingsActivity extends Activity {
         swStates.setAlpha(swBorders.isChecked() ? 1f : 0.4f);
         swFlags.setEnabled(swColors.isChecked());
         swFlags.setAlpha(swColors.isChecked() ? 1f : 0.4f);
+    }
+
+    // ---------------------------------------------------------------------- tema
+
+    private void refreshThemeRow() {
+        TextView row = findViewById(R.id.row_theme);
+        int[] names = {R.string.theme_device, R.string.theme_light, R.string.theme_dark};
+        int mode = Math.max(0, Math.min(2, Store.getThemeMode(this)));
+        SpannableStringBuilder sb = new SpannableStringBuilder(getString(R.string.setting_theme));
+        sb.append("\n");
+        int start = sb.length();
+        sb.append(getString(names[mode]));
+        sb.setSpan(new RelativeSizeSpan(0.85f), start, sb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sb.setSpan(new ForegroundColorSpan(getColor(R.color.text_secondary)), start, sb.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        row.setText(sb);
+    }
+
+    private void chooseTheme() {
+        CharSequence[] items = {
+                getString(R.string.theme_device),
+                getString(R.string.theme_light),
+                getString(R.string.theme_dark)};
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.setting_theme)
+                .setSingleChoiceItems(items, Math.max(0, Math.min(2, Store.getThemeMode(this))),
+                        (dialog, which) -> {
+                            Store.setThemeMode(this, which);
+                            dialog.dismiss();
+                            recreate();
+                        })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     /** Muestra el nombre del servicio de mapa elegido bajo el título de la opción. */

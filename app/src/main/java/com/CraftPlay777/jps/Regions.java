@@ -264,6 +264,46 @@ final class Regions {
         }
     }
 
+    /** País que contiene el punto, o null (mar o sin datos). Necesita los países cargados. */
+    Region countryAt(double lat, double lon) {
+        List<Region> list = countries;
+        if (list == null) {
+            return null;
+        }
+        float x = Mercator.x(lon);
+        float y = Mercator.y(lat);
+        for (Region c : list) {
+            if (x < c.minX || x > c.maxX || y < c.minY || y > c.maxY) {
+                continue;
+            }
+            if (contains(c.rings, x, y)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    /** Punto dentro de un conjunto de anillos (regla par-impar: los huecos quedan fuera). */
+    static boolean contains(List<GeoJson.Ring> rings, float x, float y) {
+        boolean inside = false;
+        for (GeoJson.Ring r : rings) {
+            if (x < r.minX || x > r.maxX || y < r.minY || y > r.maxY) {
+                continue;
+            }
+            float[] p = r.pts;
+            int n = p.length / 2;
+            int j = n - 1;
+            for (int i = 0; i < n; i++) {
+                float xi = p[i * 2], yi = p[i * 2 + 1], xj = p[j * 2], yj = p[j * 2 + 1];
+                if (((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+                    inside = !inside;
+                }
+                j = i;
+            }
+        }
+        return inside;
+    }
+
     List<GeoJson.Ring> statesOf(String iso3) {
         return iso3 == null ? null : states.get(iso3);
     }

@@ -1,13 +1,12 @@
 package com.CraftPlay777.jps;
 
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 /** Muestra la política de privacidad o la pantalla "Acerca de". */
-public class InfoActivity extends Activity {
+public class InfoActivity extends BaseActivity {
 
     static final String EXTRA_PAGE = "page";
     static final String PAGE_PRIVACY = "privacy";

@@ -19,6 +19,16 @@
 
             <TextView
                 style="@style/SectionTitle"
+                android:text="@string/settings_appearance" />
+
+            <TextView
+                android:id="@+id/row_theme"
+                style="@style/SettingRow"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp" />
+
+            <TextView
+                style="@style/SectionTitle"
                 android:text="@string/settings_map" />
 
             <TextView

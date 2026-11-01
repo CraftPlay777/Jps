@@ -1,7 +1,6 @@
 package com.CraftPlay777.jps;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -29,7 +28,7 @@ import java.util.Map;
  * Globo 3D: una esfera con el mapa del mundo y un modo con relieve (montañas y océanos hundidos).
  * Se dibuja con WebGL dentro de un WebView usando assets/globe.html.
  */
-public class GlobeActivity extends Activity {
+public class GlobeActivity extends BaseActivity {
 
     static final String EXTRA_LAT = "lat";
     static final String EXTRA_LON = "lon";

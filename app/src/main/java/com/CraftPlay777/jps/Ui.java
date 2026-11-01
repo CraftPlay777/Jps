@@ -26,6 +26,24 @@ final class Ui {
         return Html.fromHtml(source);
     }
 
+    /** 4500 s -> "1 h 15 min"; 90000 s -> "1 d 1 h". */
+    static String formatDuration(double seconds) {
+        long total = Math.round(seconds / 60.0); // minutos
+        if (total < 1) {
+            return "< 1 min";
+        }
+        long days = total / (60 * 24);
+        long hours = (total / 60) % 24;
+        long minutes = total % 60;
+        if (days > 0) {
+            return days + " d " + hours + " h";
+        }
+        if (hours > 0) {
+            return hours + " h " + (minutes < 10 ? "0" : "") + minutes + " min";
+        }
+        return minutes + " min";
+    }
+
     static String formatDistance(double meters, boolean imperial) {
         Locale l = Locale.getDefault();
         if (imperial) {

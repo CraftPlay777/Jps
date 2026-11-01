@@ -14,11 +14,18 @@ App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de
 - Contorno en rojo de la zona buscada (países, provincias, ciudades…) hasta que borras la búsqueda
 - Favoritos
 - Distancia desde tu posición al lugar seleccionado
-- Cómo llegar (abre otra app de mapas), compartir y copiar coordenadas
+- Cómo llegar dentro de la app (auto, moto, camión, bici o a pie) con velocidad personalizada, tiempo estimado, pasos y opción de no salir del país
+- Compartir y copiar coordenadas
+- Tema claro, oscuro o según el dispositivo
 - Servicio de mapa a elegir en Ajustes (OpenStreetMap, OSM Francia, Humanitario, CyclOSM u OpenTopoMap) y modo de mapa oscuro
 - Unidades métricas o imperiales
 - Recuerda la última posición del mapa y guarda las teselas 7 días para cargar más rápido
 - Política de privacidad dentro de la app, con aceptación en el primer arranque
+
+## Para desarrolladores
+
+Lee [CONTEXTO.md](CONTEXTO.md): arquitectura, reglas del proyecto, cómo verificar cambios sin compilar
+y cómo seguir desarrollando la app.
 
 ## Datos y privacidad
 
