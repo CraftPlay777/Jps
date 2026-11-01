@@ -12,6 +12,7 @@ App de mapas para Android, simple, sin anuncios y sin API keys. Usa los mapas de
 - Bordes de países y de estados/provincias en rojo, colorear cada país y usar su bandera como color (mapa y globo 3D); al buscar un lugar se pinta solo esa zona
 - Globo 3D separado: esfera con el mapa del mundo y modo Relieve 3D (montañas y océanos hundidos, con exageración ajustable)
 - Contorno en rojo de la zona buscada (países, provincias, ciudades…) hasta que borras la búsqueda
+- Fotos e información de Wikipedia en la ficha del lugar (países, estados, ciudades…), con galería y texto; se puede desactivar en Ajustes
 - Favoritos
 - Distancia desde tu posición al lugar seleccionado
 - Cómo llegar dentro de la app (auto, moto, camión, bici o a pie) con velocidad personalizada, tiempo estimado, pasos y opción de no salir del país

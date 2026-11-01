@@ -34,7 +34,7 @@ final class Nominatim {
 
     /** Busca lugares por texto (hasta 5 resultados). */
     static List<Place> search(String query) throws IOException, JSONException {
-        String url = BASE + "/search?format=jsonv2&addressdetails=1&limit=5&q="
+        String url = BASE + "/search?format=jsonv2&addressdetails=1&extratags=1&limit=5&q="
                 + URLEncoder.encode(query, "UTF-8");
         JSONArray array = new JSONArray(get(url));
         List<Place> out = new ArrayList<>();
@@ -48,6 +48,13 @@ final class Nominatim {
             place.osmId = o.optLong("osm_id", 0);
             place.isCountry = "country".equals(o.optString("addresstype", ""))
                     || o.optInt("place_rank", 0) == 4;
+            JSONObject extra = o.optJSONObject("extratags");
+            if (extra != null) {
+                String wiki = extra.optString("wikipedia", "");
+                if (wiki.indexOf(':') > 0) {
+                    place.wikipedia = wiki;
+                }
+            }
             JSONObject addr = o.optJSONObject("address");
             if (addr != null) {
                 String cc = addr.optString("country_code", "");

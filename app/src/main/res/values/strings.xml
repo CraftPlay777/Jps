@@ -41,6 +41,18 @@
     <string name="favorite_added">Añadido a favoritos</string>
     <string name="favorite_removed">Quitado de favoritos</string>
 
+    <!-- Fotos e información -->
+    <string name="info_ask">Ver fotos e información de Wikipedia</string>
+    <string name="info_loading">Buscando fotos e información…</string>
+    <string name="info_source">Wikipedia y Wikimedia Commons · toca el texto para leer más</string>
+    <string name="info_license">Texto de Wikipedia (CC BY-SA). Las fotos son de Wikimedia Commons, cada una con su propia licencia.</string>
+    <string name="info_open_wikipedia">Abrir en Wikipedia</string>
+    <string name="info_consent_title">Fotos e información</string>
+    <string name="info_consent_message">Para mostrar fotos e información del lugar, Jps consulta Wikipedia y Wikimedia Commons (Fundación Wikimedia). Esos servicios verán tu dirección IP y el nombre del lugar que buscas. ¿Continuar?</string>
+    <string name="settings_place_info">Fotos e información</string>
+    <string name="sw_place_info">Mostrar fotos e información de Wikipedia</string>
+    <string name="place_info_hint">Al buscar un país, estado o ciudad, la ficha muestra fotos e información de Wikipedia. Se pide permiso una sola vez. Los puntos marcados con pulsación larga y los favoritos no la muestran.</string>
+
     <!-- Favoritos -->
     <string name="favorites">Favoritos</string>
     <string name="no_favorites">Aún no tienes lugares favoritos.\nToca la estrella en la ficha de un lugar para guardarlo.</string>
@@ -89,7 +101,7 @@
 
     <string name="privacy_html"><![CDATA[
 <h2>Política de privacidad de Jps</h2>
-<p><i>Última actualización: 29 de octubre de 2026</i></p>
+<p><i>Última actualización: 1 de noviembre de 2026</i></p>
 <p>Jps es una aplicación de mapas de código abierto creada por CraftPlay777. Esta política explica qué datos usa la app y para qué.</p>
 
 <h3>Resumen</h3>
@@ -105,6 +117,7 @@
 <li><b>Otros servicios de mapa</b>, solo si los eliges en Ajustes: OpenStreetMap Francia, Humanitario y CyclOSM (tile.openstreetmap.fr y tile-cyclosm.openstreetmap.fr, operados por OpenStreetMap Francia) u OpenTopoMap (opentopomap.org). El servicio que elijas recibe la zona que estás viendo.</li>
 <li><b>Globo 3D</b> (solo si abres esa pantalla y aceptas): descarga imágenes del mapa de tile.openstreetmap.org y datos de elevación de Terrain Tiles, alojados en Amazon Web Services (s3.amazonaws.com). Ambos reciben tu dirección IP. La app añade su nombre y versión al identificador del navegador interno que dibuja el globo, como piden las normas de OpenStreetMap.</li>
 <li><b>Fronteras, estados y banderas</b> (solo si activas esas opciones y aceptas): descarga las fronteras de los países desde raw.githubusercontent.com (Natural Earth), los límites de estados y provincias desde github.com (geoBoundaries) y las banderas desde flagcdn.com. Estos servicios reciben tu dirección IP y el código del país cuyos datos se piden. Los archivos se guardan en tu dispositivo.</li>
+<li><b>Fotos e información</b> (solo si dejas activada esa opción en Ajustes y aceptas): consulta Wikipedia (es.wikipedia.org y otros idiomas de Wikipedia cuando el lugar solo existe allí) para el texto y Wikimedia Commons (upload.wikimedia.org) para las fotos. Ambos son operados por la Fundación Wikimedia, ven tu dirección IP y reciben el nombre o el artículo del lugar que buscas. Las fotos se guardan solo en la memoria del móvil mientras la app está abierta.</li>
 <li><b>Cómo llegar</b> (solo cuando pides una ruta y aceptas): envía las coordenadas de tu ubicación y del destino a routing.openstreetmap.de (servicio OSRM de FOSSGIS, en Alemania), que guarda las peticiones en sus registros y ve tu dirección IP. Es la única vez que Jps envía tu ubicación a un servidor.</li>
 <li><b>Nominatim</b> (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.</li>
 </ul>
@@ -144,6 +157,7 @@
 <li>Fronteras de países: Natural Earth (dominio público).</li>
 <li>Límites de estados y provincias: geoBoundaries (William &amp; Mary geoLab), licencia CC BY 4.0.</li>
 <li>Banderas: Flagpedia (flagcdn.com).</li>
+<li>Fotos e información de lugares: texto de Wikipedia (CC BY-SA) y fotos de Wikimedia Commons, cada una con su propia licencia. <a href="https://commons.wikimedia.org">commons.wikimedia.org</a></li>
 <li>Rutas: OSRM con datos de OpenStreetMap, servidas por FOSSGIS (routing.openstreetmap.de).</li>
 <li>Librería de mapas: osmdroid (Apache License 2.0).</li>
 <li>Iconos: Material Icons de Google (Apache License 2.0).</li>

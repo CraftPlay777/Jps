@@ -12,6 +12,7 @@ final class Place {
     double[] bbox;    // {sur, norte, oeste, este}
     String countryCode; // código ISO de 2 letras en mayúsculas (ej. "AR")
     boolean isCountry;  // true si el resultado es un país
+    String wikipedia;   // etiqueta de OSM, por ejemplo "es:Resistencia (Argentina)" (puede ser null)
 
     Place(String name, double lat, double lon) {
         this.name = name;

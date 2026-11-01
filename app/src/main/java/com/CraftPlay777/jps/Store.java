@@ -114,6 +114,23 @@ final class Store {
         sp(c).edit().putBoolean("flags", value).apply();
     }
 
+    // Fotos e información de Wikipedia (consulta Wikipedia y Wikimedia Commons, por eso pide permiso).
+    static boolean isInfoOn(Context c) {
+        return sp(c).getBoolean("info_on", true);
+    }
+
+    static void setInfoOn(Context c, boolean value) {
+        sp(c).edit().putBoolean("info_on", value).apply();
+    }
+
+    static boolean isInfoConsent(Context c) {
+        return sp(c).getBoolean("info_consent", false);
+    }
+
+    static void setInfoConsent(Context c, boolean value) {
+        sp(c).edit().putBoolean("info_consent", value).apply();
+    }
+
     // ------------------------------------------------------------------ tema
 
     /** 0 = según el dispositivo, 1 = claro, 2 = oscuro. Por defecto, claro. */

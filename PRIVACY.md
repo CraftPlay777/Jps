@@ -1,6 +1,6 @@
 # Política de privacidad de Jps
 
-*Última actualización: 29 de octubre de 2026*
+*Última actualización: 1 de noviembre de 2026*
 
 Jps es una aplicación de mapas de código abierto creada por CraftPlay777. Esta política explica qué datos usa la app y para qué.
 
@@ -20,6 +20,7 @@ Para funcionar, la app se conecta a estos servicios, que reciben tu dirección I
 - **Otros servicios de mapa**, solo si los eliges en Ajustes: OpenStreetMap Francia, Humanitario y CyclOSM (tile.openstreetmap.fr y tile-cyclosm.openstreetmap.fr, operados por OpenStreetMap Francia) u OpenTopoMap (opentopomap.org). El servicio que elijas recibe la zona que estás viendo.
 - **Globo 3D** (solo si abres esa pantalla y aceptas): descarga imágenes del mapa de tile.openstreetmap.org y datos de elevación de Terrain Tiles, alojados en Amazon Web Services (s3.amazonaws.com). Ambos reciben tu dirección IP. La app añade su nombre y versión al identificador del navegador interno que dibuja el globo, como piden las normas de OpenStreetMap.
 - **Fronteras, estados y banderas** (solo si activas esas opciones y aceptas): descarga las fronteras de los países desde raw.githubusercontent.com (Natural Earth), los límites de estados y provincias desde github.com (geoBoundaries) y las banderas desde flagcdn.com. Estos servicios reciben tu dirección IP y el código del país cuyos datos se piden. Los archivos se guardan en tu dispositivo.
+- **Fotos e información** (solo si dejas activada esa opción en Ajustes y aceptas): consulta Wikipedia (es.wikipedia.org y otros idiomas de Wikipedia cuando el lugar solo existe allí) para el texto y Wikimedia Commons (upload.wikimedia.org) para las fotos. Ambos son operados por la Fundación Wikimedia, ven tu dirección IP y reciben el nombre o el artículo del lugar que buscas. Las fotos se guardan solo en la memoria del móvil mientras la app está abierta.
 - **Cómo llegar** (solo cuando pides una ruta y aceptas): envía las coordenadas de tu ubicación y del destino a routing.openstreetmap.de (servicio OSRM de FOSSGIS, en Alemania), que guarda las peticiones en sus registros y ve tu dirección IP. Es la única vez que Jps envía tu ubicación a un servidor.
 - **Nominatim** (nominatim.openstreetmap.org): recibe el texto que buscas, las coordenadas de un punto que marcas con pulsación larga o el identificador del lugar que eliges, para devolver resultados, direcciones o el contorno de una zona.
 

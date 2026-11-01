@@ -4,14 +4,14 @@ Documento de traspaso. Está escrito para que una persona (o una IA) que no cono
 pueda entender qué hay, por qué se hizo así y cómo continuar sin romper nada.
 
 - **Repositorio:** github.com/CraftPlay777/Jps · **Paquete:** `com.CraftPlay777.jps`
-- **Versión al escribir esto:** 1.8 (versionCode 10)
+- **Versión al escribir esto:** 1.9 (versionCode 11)
 - **Stack:** Java, Android sin AppCompat (clases `Activity` planas), una sola dependencia: osmdroid 6.1.18
 - **Android:** minSdk 23, compileSdk/targetSdk 34 · AGP 8.5.2 · Gradle 8.9 · JDK 17
 - **Idioma de la interfaz:** español (los textos están en `res/values/strings.xml`)
 
-> **Estado a tener en cuenta:** la versión 1.8 (tema claro/oscuro y "Cómo llegar" dentro de la app)
-> se escribió y se revisó con las herramientas de `tools/`, pero **todavía no se ha compilado en
-> GitHub Actions ni probado en el móvil**. Lo primero al retomar el proyecto es compilarla y
+> **Estado a tener en cuenta:** las versiones 1.8 (tema claro/oscuro y "Cómo llegar") y 1.9 (fotos e
+> información de Wikipedia en la ficha) se escribieron y se revisaron con las herramientas de `tools/`, pero
+> **todavía no se han compilado en GitHub Actions ni probado en el móvil**. Lo primero al retomar el proyecto es compilarla y
 > corregir lo que salga. Hasta la 1.7.1 todo se compiló y el dueño la probó ("funciona perfecto").
 
 ---
@@ -27,6 +27,7 @@ servicios abiertos basados en OpenStreetMap. Funciones actuales:
 - Bordes de países y de estados/provincias en rojo, colorear cada país y usar su bandera (mapa y globo).
 - **Globo 3D** separado: esfera con el mapa y modo "Relieve 3D" (montañas y océanos hundidos).
 - **Cómo llegar** dentro de la app: vehículo, velocidad personalizada, tiempo, pasos y "no salir del país".
+- **Fotos e información** de Wikipedia en la ficha del lugar (galería de Wikimedia Commons + resumen).
 - Tema blanco, negro o según el dispositivo.
 - Política de privacidad dentro de la app y aviso de aceptación antes de cualquier conexión.
 
@@ -56,7 +57,7 @@ cd /storage/emulated/0/Download/ && mkdir -p Jps JpsMemory && find Jps -mindepth
 1. **Sin API keys ni servicios de pago.** Solo servicios abiertos y gratuitos.
 2. **Ninguna conexión antes de aceptar.** El primer arranque muestra la política; hasta aceptar,
    `map.setUseDataConnection(false)`. Cada función que usa un servicio nuevo pide su propio permiso
-   (claves `consent`, `globe_consent`, `regions_consent`, `route_consent` en `Store`).
+   (claves `consent`, `globe_consent`, `regions_consent`, `route_consent`, `info_consent` en `Store`).
 3. **Respetar las políticas de uso:** OSM limita las apps a 2 conexiones de teselas (no subir los
    hilos de descarga); Nominatim y el servicio de rutas piden máximo 1 petición por segundo (hay
    `throttle()` en `Nominatim` y `Routing`); siempre un `User-Agent` que identifique la app.
@@ -84,6 +85,8 @@ cd /storage/emulated/0/Download/ && mkdir -p Jps JpsMemory && find Jps -mindepth
 | `Regions` | Datos de países, estados/provincias y banderas: descarga bajo demanda, caché en `filesDir/geo/`, colores, `countryAt()`. |
 | `RegionsOverlay` | Dibuja bordes, estados, colores y banderas de todos los países (con recorte y decimación). |
 | `ZoneOverlay` | Rellena la zona buscada (bandera si es país, color si es estado o ciudad). |
+| `WikiInfo` | Cliente de Wikipedia/Commons: resuelve el artículo (etiqueta `wikipedia` de OSM o búsqueda), resumen, fotos filtradas (sin banderas ni mapas) y descarga de miniaturas reducidas. |
+| `PlaceInfoController` | Bloque de fotos e información dentro de la ficha: permiso, ajuste, descarga en segundo plano, galería y diálogos. |
 | `Routing` | Cliente del servicio de rutas (OSRM de FOSSGIS), instrucciones en español y `foreignCountry()` para "no salir del país". |
 | `Vehicle` | Vehículos (auto, moto, camión, bicicleta, a pie): perfil de ruta y velocidad por defecto. |
 | `RouteController` | Panel "Cómo llegar" de la pantalla principal: vehículo, velocidad, cálculo, resultado y pasos. |
@@ -147,7 +150,19 @@ invierte las teselas.
   mediante el puente `JpsApp.setOption(clave, valor)` (claves `b`, `s`, `c`, `f`).
 - Las funciones puras del globo (malla, relieve, países, dibujo) se exportan para probarlas en Node.
 
-### 5.6 Cómo llegar
+### 5.6 Fotos e información de Wikipedia
+- `Nominatim.search` pide `extratags=1` y guarda en `Place.wikipedia` la etiqueta de OSM (ej. `es:Chaco`).
+  `WikiInfo.fetch` usa ese artículo (si es de otro idioma, busca su equivalente en español con `langlinks`);
+  si no hay etiqueta y el lugar es una zona (caja > 0,01°), busca por texto con "primer + penúltimo + último"
+  componente del nombre. Los puntos sueltos (comercios, pines) sin etiqueta no muestran nada.
+- Resumen: `/api/rest_v1/page/summary`. Fotos: `generator=images` + `imageinfo` (miniatura de 480 px),
+  solo JPEG de 600×300 o más y sin palabras como flag, escudo, mapa, logo (lista `SKIP`). Máximo 12.
+- `PlaceInfoController`: un hilo para el texto y dos para las fotos, caché pequeña en memoria (`LruCache`
+  de 4 MB, decodificación RGB_565 con `inSampleSize`). Ajuste `info_on` (por defecto activo) y permiso
+  propio `info_consent`. Las fotos nunca se guardan en disco.
+- Limitación: los favoritos y los pines de pulsación larga no traen datos de OSM, así que no muestran info.
+
+### 5.7 Cómo llegar
 - `RouteController` abre el panel (`route_panel`), pide permiso la primera vez y calcula con
   `Routing.fetch`: `https://routing.openstreetmap.de/routed-{car|bike|foot}/route/v1/driving/...`
   (el prefijo decide el perfil; la parte "driving" se ignora). Siempre pide alternativas.
@@ -168,6 +183,7 @@ invierte las teselas.
 | `raw.githubusercontent.com/nvkelso/natural-earth-vector` | Fronteras de países (50m) | Dominio público. |
 | `github.com/wmgeolab/geoBoundaries` | Estados/provincias por país | CC BY 4.0 (hay que dar crédito). |
 | `flagcdn.com` | Banderas | Gratuito. |
+| `es.wikipedia.org` (y otros idiomas) y `upload.wikimedia.org` | Texto y fotos del lugar | Identificar la app con `User-Agent`; texto CC BY-SA, cada foto con su licencia (se da crédito en "Acerca de"). |
 | `s3.amazonaws.com/elevation-tiles-prod` | Relieve del globo (Terrarium) | Datos de Tilezen/Mapzen; pedir atribución. |
 
 ## 7. Cómo verificar un cambio (antes de subir)
@@ -208,7 +224,7 @@ Después, `git push` y mirar **Actions → Build APK**. Si falla, copiar el erro
 
 ## 10. Siguientes pasos sugeridos (por orden)
 
-1. **Compilar y probar la 1.8** (tema claro/oscuro y rutas) y corregir lo que falle.
+1. **Compilar y probar la 1.9** (fotos e información, tema claro/oscuro y rutas) y corregir lo que falle.
 2. Rutas: elegir el origen tocando el mapa o buscándolo, paradas intermedias, ver las alternativas,
    compartir la ruta y guardar rutas recientes.
 3. Dividir `MainActivity` en controladores (búsqueda, zona buscada, regiones), como ya se hizo con
@@ -247,3 +263,4 @@ Después, `git push` y mirar **Actions → Build APK**. Si falla, copiar el erro
 | 1.6 | Pulsación larga en + / − para zoom máximo o mínimo |
 | 1.7 / 1.7.1 | Bordes, estados, colores y banderas (mapa y globo); arreglo de la descarga |
 | 1.8 | Tema blanco/negro/dispositivo y "Cómo llegar" dentro de la app *(sin probar aún)* |
+| 1.9 | Fotos e información de Wikipedia en la ficha del lugar *(sin probar aún)* |

@@ -30,6 +30,7 @@ public class SettingsActivity extends BaseActivity {
         findViewById(R.id.row_map_source).setOnClickListener(
                 v -> MapSources.showChooser(this, this::refreshMapSourceRow));
 
+        setupPlaceInfoSwitch();
         setupRegionSwitches();
 
         Switch dark = findViewById(R.id.sw_dark);
@@ -61,6 +62,14 @@ public class SettingsActivity extends BaseActivity {
 
         findViewById(R.id.row_privacy).setOnClickListener(v -> openPage(InfoActivity.PAGE_PRIVACY));
         findViewById(R.id.row_about).setOnClickListener(v -> openPage(InfoActivity.PAGE_ABOUT));
+    }
+
+    // ------------------------------------------------------ fotos e información
+
+    private void setupPlaceInfoSwitch() {
+        final Switch sw = findViewById(R.id.sw_place_info);
+        sw.setChecked(Store.isInfoOn(this));
+        sw.setOnCheckedChangeListener((button, checked) -> Store.setInfoOn(this, checked));
     }
 
     // ------------------------------------------------ bordes, estados, colores y banderas

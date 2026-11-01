@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity {
     private ZoneOverlay zoneOverlay;
     private RegionsOverlay regionsOverlay;
     private RouteController routeController;
+    private PlaceInfoController placeInfo;
     private final Handler idleHandler = new Handler(Looper.getMainLooper());
     private final Runnable requestStatesTask = () -> {
         if (regionsOverlay != null) {
@@ -135,6 +136,7 @@ public class MainActivity extends BaseActivity {
         favoriteButton = findViewById(R.id.btn_favorite);
         map = findViewById(R.id.map);
 
+        placeInfo = new PlaceInfoController(this);
         setupMap();
         setupSearch();
         setupButtons();
@@ -314,6 +316,9 @@ public class MainActivity extends BaseActivity {
         }
         applyRegions();
         updateCardInfo();
+        if (selected != null) {
+            placeInfo.show(selected); // refleja el interruptor de Ajustes (no repite si no cambió)
+        }
         map.invalidate();
     }
 
@@ -486,6 +491,7 @@ public class MainActivity extends BaseActivity {
         cardTitle.setText(p.name != null ? p.name : getString(R.string.searching_address));
         updateCardInfo();
         card.setVisibility(View.VISIBLE);
+        placeInfo.show(p);
 
         if (zoomTo) {
             zoomToPlace(p, point);
@@ -639,6 +645,7 @@ public class MainActivity extends BaseActivity {
             routeController.close();
         }
         selected = null;
+        placeInfo.hide();
         card.setVisibility(View.GONE);
         if (marker != null) {
             map.getOverlays().remove(marker);
@@ -903,6 +910,7 @@ public class MainActivity extends BaseActivity {
         io.shutdown();
         boundaryIo.shutdown();
         routeController.shutdown();
+        placeInfo.shutdown();
         map.onDetach();
     }
 

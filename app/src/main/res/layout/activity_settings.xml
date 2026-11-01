@@ -54,6 +54,19 @@
 
             <TextView
                 style="@style/SectionTitle"
+                android:text="@string/settings_place_info" />
+
+            <Switch
+                android:id="@+id/sw_place_info"
+                style="@style/SettingRow"
+                android:text="@string/sw_place_info" />
+
+            <TextView
+                style="@style/HintText"
+                android:text="@string/place_info_hint" />
+
+            <TextView
+                style="@style/SectionTitle"
                 android:text="@string/regions_section" />
 
             <Switch
