@@ -28,7 +28,9 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            if (System.getenv("KEYSTORE_FILE")) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
         }
     }

@@ -36,7 +36,7 @@ Sin cuentas ni rastreadores. Lee la [política de privacidad](PRIVACY.md).
 ## Compilar
 
 Cada `git push` a `main` compila el APK con GitHub Actions.
-Descárgalo en **Actions → Build APK → Artifacts → Jps-debug-apk**.
+Descárgalo en **Actions → Build APK → Artifacts → Jps-release-apk** (firmado con la clave del proyecto).
 
 - Paquete: `com.CraftPlay777.jps`
 - Android 6.0+ (minSdk 23)
