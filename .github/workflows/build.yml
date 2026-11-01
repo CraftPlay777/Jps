@@ -2,7 +2,6 @@ name: Build APK
 
 on:
   push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -20,10 +19,20 @@ jobs:
         with:
           gradle-version: 8.9
 
-      - name: Compilar APK debug
-        run: gradle assembleDebug --stacktrace
+      - name: Preparar firma
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/jps-release.jks"
+
+      - name: Compilar release
+        env:
+          KEYSTORE_FILE: ${{ runner.temp }}/jps-release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: gradle assembleRelease
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Jps-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: Jps-release-apk
+          path: app/build/outputs/apk/release/*.apk

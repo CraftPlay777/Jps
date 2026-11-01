@@ -6,3 +6,7 @@ local.properties
 *.iml
 tools/globe-tests/globe.js
 __pycache__/
+
+*.jks
+
+*.b64
